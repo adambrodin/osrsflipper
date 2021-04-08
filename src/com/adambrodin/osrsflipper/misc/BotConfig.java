@@ -27,4 +27,10 @@ public class BotConfig {
 
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = true;
+
+    // TRAVELLING
+    public static final int MIN_RUNENERGY_ACTIVATE = 3; // The minimum amount of run energy to randomly activate run when walking
+    public static final int MAX_RUNENERGY_ACTIVATE = 10; // The maximum amount of run energy to randomly activate run when walking
+    public static final int MIN_WALK_CLICK_DELAY_MS = 500; // The minimum amount of delay before clicking the next tile while walking/running
+    public static final int MAX_WALK_CLICK_DELAY_MS = 2000; // The maximum amount of delay before clicking the next tile while walking/running
 }

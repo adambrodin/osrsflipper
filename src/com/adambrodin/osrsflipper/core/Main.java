@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.logic.FlipFinder;
+import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.randoms.RandomEvent;
@@ -26,6 +27,7 @@ public class Main extends AbstractScript {
 
     @Override
     public int onLoop() {
+        AccountSetup.SetupTrading();
         return 0;
     }
 }
