@@ -1,2 +1,2 @@
-# osrsflipper
-Automatically flips items for you in OSRS.
+# OSRS Flipper
+This bot written using the OSBot library will automatically find the best current flips. It does fetching live-market data from the [official API](https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices) and then calculates the best ones through an algorithm.
