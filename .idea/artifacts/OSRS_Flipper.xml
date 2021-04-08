@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="OSRS Flipper">
+    <output-path>$USER_HOME$/DreamBot/Scripts</output-path>
+    <root id="archive" name="OSRS Flipper.jar">
+      <element id="library" level="project" name="client" />
+      <element id="module-output" name="OSRS Flipper" />
+    </root>
+  </artifact>
+</component>
