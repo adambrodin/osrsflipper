@@ -68,7 +68,7 @@ public class Flipper {
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
                         log("Force-selling " + amount + "x " + flip.item.item.itemName);
                         boolean isSold = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
-                        sleepUntil(() -> isSold && GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        sleepUntil(() -> isSold && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
                         sleep(2000);
                         GrandExchange.collect();
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
