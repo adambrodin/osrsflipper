@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.logic.FlipFinder;
+import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.randoms.RandomEvent;
 import org.dreambot.api.script.AbstractScript;
@@ -12,7 +13,9 @@ public class Main extends AbstractScript {
     @Override
     public void onStart() {
         // Disable auto-login
-        getRandomManager().disableSolver(RandomEvent.LOGIN);
+        if (BotConfig.DISABLE_AUTOLOGIN) {
+            getRandomManager().disableSolver(RandomEvent.LOGIN);
+        }
 
         FlipFinder flipFinder = new FlipFinder();
         FlipItem bestItem = flipFinder.GetBestMarginItem(10000000);

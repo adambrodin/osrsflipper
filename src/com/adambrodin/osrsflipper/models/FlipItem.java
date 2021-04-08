@@ -32,13 +32,13 @@ public class FlipItem {
         // Increases score, the more the profit is
         score += potentialProfit * 10;
 
-        // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes)
-        if (marginPerc <= BotConfig.maxValidMarginPerc) {
+        // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes which are typically slower)
+        if (marginPerc <= BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
             score += potentialProfit * 3;
         }
 
         // Increases score if the item has had more trading volume (more likely to successfully flip)
-        if(averagedVolume >= BotConfig.greatItemVolume)
+        if(averagedVolume >= BotConfig.ITEM_VOLUME_GREAT)
         {
             score += potentialProfit * 5;
         }

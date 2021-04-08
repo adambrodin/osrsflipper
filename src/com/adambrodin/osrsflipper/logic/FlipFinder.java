@@ -18,7 +18,7 @@ public class FlipFinder {
 
     public FlipFinder() {
         ArrayList<ApiItem> allItems = RuneLiteApi.GetAllItems();
-        if (BotConfig.onlyF2pItems) {
+        if (BotConfig.ONLY_F2P_ITEMS) {
             // Remove all member items
             allItems.removeIf(item -> item.isMembers);
         }
@@ -37,7 +37,7 @@ public class FlipFinder {
             boolean isMember = false;
             for (ApiItem item : availableItems) {
                 if (item.itemID == entry.getKey()) {
-                    if (BotConfig.onlyF2pItems && item.isMembers) {
+                    if (BotConfig.ONLY_F2P_ITEMS && item.isMembers) {
                         isMember = true;
                     }
 
@@ -56,7 +56,7 @@ public class FlipFinder {
                 double averagedVolume = ((double) entryItem.highPriceVolume + (double) entryItem.lowPriceVolume) / 2;
                 log(apiItem.itemName + " - averaged hour volume: " + averagedVolume);
 
-                if (marginPerc >= BotConfig.minItemMarginPerc && marginPerc <= BotConfig.maxValidMarginPerc && averagedVolume >= BotConfig.minItemVolume && marginGp >= BotConfig.minItemMarginGp) {
+                if (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP) {
                     bestItems.add(new FlipItem(apiItem, avgLowPrice, marginPerc, marginGp, (int) averagedVolume));
                 }
             }
