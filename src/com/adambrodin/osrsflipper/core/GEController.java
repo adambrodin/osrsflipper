@@ -31,18 +31,40 @@ public class GEController {
         }
 
         ActiveFlip flip = new ActiveFlip(buy, amount, item);
-        log("Added new active flip: " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
+        log("Added new active flip (BUY)" + ": " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
         Flipper.activeFlips.add(flip);
         sleepUntil(() -> ItemInSlot(item), BotConfig.MAX_ACTION_TIMEOUT_MS);
     }
 
     private static boolean ItemInSlot(FlipItem item) {
         for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-            if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
-                return true;
+            try {
+                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                //log("ItemInSlot: " + e.getMessage());
             }
         }
         return false;
+    }
+
+    // Returns the amount of items from slot
+    public static void CollectItem(FlipItem item) {
+        if (GrandExchange.isOpen()) {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem.getItem().getName().equals(item.item.itemName)) {
+                    // If its fully completed
+                    if (geItem.getTransferredAmount() != geItem.getAmount()) {
+                        GrandExchange.cancelOffer(geItem.getSlot());
+                        sleepUntil(() -> geItem.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                    }
+                    GrandExchange.collect();
+                    sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                    return;
+                }
+            }
+        }
     }
 
     public static int AmountOfSlotsAvailable() {
@@ -60,5 +82,27 @@ public class GEController {
         }
 
         return amountOfSlots;
+    }
+
+    public static float GetCompletedPercentage(FlipItem item) {
+        try {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                    if (geItem.isReadyToCollect()) {
+                        return 100;
+                    }
+
+                    if (geItem.getTransferredAmount() <= 0) {
+                        return 0;
+                    }
+
+                    return (geItem.getTransferredAmount() / geItem.getAmount()) * 100;
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        // Item not found
+        return -1;
     }
 }

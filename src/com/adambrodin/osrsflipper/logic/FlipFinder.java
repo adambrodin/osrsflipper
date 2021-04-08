@@ -57,14 +57,19 @@ public class FlipFinder {
 
                 double averagedVolume = ((double) entryItem.highPriceVolume + (double) entryItem.lowPriceVolume) / 2;
 
+                boolean itemAlreadyFlipping = false;
                 if (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP) {
                     for (ActiveFlip flip : Flipper.activeFlips) {
                         // Prevent the same item being flipped multiple times
                         if (flip.item.item.itemName.equals(apiItem.itemName)) {
-                            continue;
+                            itemAlreadyFlipping = true;
+                            break;
                         }
                     }
-                    bestItems.add(new FlipItem(apiItem, avgLowPrice, marginPerc, marginGp, (int) averagedVolume));
+
+                    if (!itemAlreadyFlipping) {
+                        bestItems.add(new FlipItem(apiItem, avgLowPrice, marginPerc, marginGp, (int) averagedVolume));
+                    }
                 }
             }
         }
@@ -86,7 +91,6 @@ public class FlipFinder {
                     consideredItems++;
                 }
             } catch (Exception e) {
-                log("IT BROKE HERE");
                 log("Exception for item " + item.item.itemName + " - " + e.getMessage());
             }
         }
