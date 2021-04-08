@@ -1,9 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
-import com.adambrodin.osrsflipper.logic.FlipFinder;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
-import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.randoms.RandomEvent;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
@@ -17,12 +15,6 @@ public class Main extends AbstractScript {
         if (BotConfig.DISABLE_AUTOLOGIN) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
         }
-
-        FlipFinder flipFinder = new FlipFinder();
-        FlipItem bestItem = flipFinder.GetBestMarginItem(10000000);
-        if (bestItem != null)
-            log("The best margin item currently is: " + bestItem.item.itemName + " at " + bestItem.marginPerc + "% margin - " + bestItem.marginGp + "gp - potential profit: " + bestItem.potentialProfitGp + "gp"
-                    + " - avgLowPrice: " + bestItem.avgLowPrice + " - averaged volume: " + bestItem.averagedVolume);
     }
 
     @Override

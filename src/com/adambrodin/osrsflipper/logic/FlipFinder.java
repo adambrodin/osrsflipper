@@ -1,6 +1,8 @@
 package com.adambrodin.osrsflipper.logic;
 
+import com.adambrodin.osrsflipper.core.Flipper;
 import com.adambrodin.osrsflipper.misc.BotConfig;
+import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.ApiItem;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import com.adambrodin.osrsflipper.models.PriceData;
@@ -54,9 +56,14 @@ public class FlipFinder {
                 int marginGp = avgHighPrice - avgLowPrice;
 
                 double averagedVolume = ((double) entryItem.highPriceVolume + (double) entryItem.lowPriceVolume) / 2;
-                log(apiItem.itemName + " - averaged hour volume: " + averagedVolume);
 
                 if (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP) {
+                    for (ActiveFlip flip : Flipper.activeFlips) {
+                        // Prevent the same item being flipped multiple times
+                        if (flip.item.item.itemName.equals(apiItem.itemName)) {
+                            continue;
+                        }
+                    }
                     bestItems.add(new FlipItem(apiItem, avgLowPrice, marginPerc, marginGp, (int) averagedVolume));
                 }
             }
@@ -79,6 +86,7 @@ public class FlipFinder {
                     consideredItems++;
                 }
             } catch (Exception e) {
+                log("IT BROKE HERE");
                 log("Exception for item " + item.item.itemName + " - " + e.getMessage());
             }
         }

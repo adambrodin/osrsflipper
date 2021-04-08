@@ -13,7 +13,7 @@ import static org.dreambot.api.methods.MethodProvider.logError;
 import static org.dreambot.api.methods.MethodProvider.sleepUntil;
 
 public class AccountSetup {
-    private static boolean bankIsChecked;
+    private static boolean bankIsChecked = false;
 
     // Does the essential things before trading can start (e.g walk to GE && get cash)
     public static void SetupTrading() {
@@ -26,7 +26,14 @@ public class AccountSetup {
             sleepUntil(() -> !GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
         }
 
-        PrepareForTrading();
+        if (!IsReadyToTrade()) {
+            PrepareForTrading();
+        }
+    }
+
+    public static boolean IsReadyToTrade() {
+        // getFirstOpenSlot is only -1 if there are no slots available
+        return bankIsChecked && GrandExchange.isOpen();
     }
 
     private static void PrepareForTrading() {
@@ -48,6 +55,7 @@ public class AccountSetup {
             sleepUntil(() -> Inventory.contains("Coins"), BotConfig.MAX_ACTION_TIMEOUT_MS);
             Bank.close();
             sleepUntil(() -> !Bank.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+            bankIsChecked = true;
         }
 
         if (!GrandExchange.isOpen()) {

@@ -12,6 +12,7 @@ public class FlipItem {
     public float averagedVolume;
 
     public int potentialProfitGp;
+    public int maxAmountAvailable;
 
     public FlipItem(ApiItem item, int avgLowPrice, float marginPerc, int marginGp, float averagedVolume) {
         this.item = item;
@@ -24,23 +25,22 @@ public class FlipItem {
     public int GetPerformanceScore(int availableGp, int remainingBuyingLimit) {
         float score = 1000;
         // Determines how many items that can be bought based on player gold & current market
-        int maxAmountAvailable = (int) Math.min(Math.min(remainingBuyingLimit, averagedVolume), (availableGp / avgLowPrice));
+        maxAmountAvailable = (int) Math.min(Math.min(remainingBuyingLimit, averagedVolume), (availableGp / avgLowPrice));
 
-        int potentialProfit = maxAmountAvailable * marginGp;
-        potentialProfitGp = potentialProfit;
+        potentialProfitGp = maxAmountAvailable * marginGp;
 
         // Increases score, the more the profit is
-        score += potentialProfit * 10;
+        score += potentialProfitGp * 10;
 
         // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes which are typically slower)
         if (marginPerc <= BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
-            score += potentialProfit * 3;
+            score += potentialProfitGp * 3;
         }
 
         // Increases score if the item has had more trading volume (more likely to successfully flip)
         if(averagedVolume >= BotConfig.ITEM_VOLUME_GREAT)
         {
-            score += potentialProfit * 5;
+            score += potentialProfitGp * 5;
         }
 
         //log(item.itemName + " - " + "Available gp: " + availableGp + "gp - AvgLowPrice: " + avgLowPrice + "gp - Margin gp:" + marginGp + "gp" + " - remaining limit: "
