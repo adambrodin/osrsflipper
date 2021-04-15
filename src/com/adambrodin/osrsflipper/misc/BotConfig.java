@@ -11,23 +11,23 @@ public class BotConfig {
     public static final String MARKET_HOUR_DATA_ENDPOINT = "/1h"; // The endpoint to gather volume data
 
     // FLIP CONFIGURATIONS
-    public static final boolean ONLY_F2P_ITEMS = true;
+    public static final boolean ONLY_F2P_ITEMS = false;
     public static final int ITEM_VOLUME_GREAT = 1000; // Determine what min volume that gets extra score when considered
     public static final int MAX_CASHSTACK_PERCENTAGE_PER_FLIP = 80; // The max percentage of the current money to use in a single flip (values less than 100 provide a broader range of items instead of spending everything on one item)
-    public static final int MIN_GOLD_FOR_FLIP = 1000; // Minimum amount of gp in inventory to start new flips
-    public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 20;
+    public static final int MIN_GOLD_FOR_FLIP = 5000; // Minimum amount of gp in inventory to start new flips
+    public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 30;
     public static final float MAX_ITEM_MARGIN_PERCENTAGE = 15; // Max percentage margin for an item to even be considered at all
     public static final float MAX_VALID_MARGIN_PERCENTAGE = 5; // Maximum percentage for an item to considered normally (this is to minimize items such as runes with 25% margin)
-    public static final float MIN_ITEM_MARGIN_PERCENTAGE = 1f; // Min margin for an item to be considered
+    public static final float MIN_ITEM_MARGIN_PERCENTAGE = 1; // Min margin for an item to be considered
     public static final float MIN_ITEM_MARGIN_GP = 1;
-    public static final float MIN_ITEM_VOLUME = 200; // Min volume for an item in the endpoint timespan
+    public static final float MIN_ITEM_VOLUME = 20000; // Min volume for an item in the endpoint timespan
 
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);
 
     // TIMEOUTS
     public static final int MAX_ACTION_TIMEOUT_MS = 5000; // Max time before automatically moving on from a sleepUntil (in case something went wrong, to prevent program getting stuck)
-    public static final int LOGOUT_SLEEP_DURATION_MINUTES = 20; // The amount of time to sleep when logged out before logging back in
+    public static final int LOGOUT_SLEEP_DURATION_MINUTES = 30; // The amount of time to sleep when logged out before logging back in
 
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = true;

@@ -6,12 +6,13 @@ import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.grandexchange.GrandExchangeItem;
 
-import static org.dreambot.api.methods.MethodProvider.log;
-import static org.dreambot.api.methods.MethodProvider.sleepUntil;
+import static org.dreambot.api.methods.MethodProvider.*;
 
 public class GEController {
     // Buy/sell in the GE
     public static void TransactItem(FlipItem item, boolean buy, int amount) {
+        boolean tradeCreated = false;
+
         if (buy) {
             int price = item.avgLowPrice;
             if (BotConfig.CUT_PRICES) {
@@ -19,7 +20,7 @@ public class GEController {
                 price += Math.round(item.marginGp / 10);
             }
 
-            GrandExchange.buyItem(item.item.itemName, amount, price);
+            tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
         } else {
             int price = item.avgLowPrice + item.marginGp;
             if (BotConfig.CUT_PRICES) {
@@ -27,13 +28,16 @@ public class GEController {
                 price -= Math.round(item.marginGp / 10);
             }
 
-            GrandExchange.sellItem(item.item.itemName, amount, price);
+            tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);
         }
 
-        ActiveFlip flip = new ActiveFlip(buy, amount, item);
-        log("Added new active flip (BUY)" + ": " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
-        Flipper.activeFlips.add(flip);
-        sleepUntil(() -> ItemInSlot(item), BotConfig.MAX_ACTION_TIMEOUT_MS);
+        if (tradeCreated) {
+            ActiveFlip flip = new ActiveFlip(buy, amount, item);
+            log("Added new active flip (BUY)" + ": " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
+            Flipper.activeFlips.add(flip);
+            sleep(1000);
+            sleepUntil(() -> ItemInSlot(item), BotConfig.MAX_ACTION_TIMEOUT_MS);
+        }
     }
 
     private static boolean ItemInSlot(FlipItem item) {
@@ -51,19 +55,26 @@ public class GEController {
 
     // Returns the amount of items from slot
     public static void CollectItem(FlipItem item) {
-        if (GrandExchange.isOpen()) {
-            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem.getItem().getName().equals(item.item.itemName)) {
-                    // If its fully completed
-                    if (geItem.getTransferredAmount() != geItem.getAmount()) {
-                        GrandExchange.cancelOffer(geItem.getSlot());
-                        sleepUntil(() -> geItem.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+        try {
+            if (GrandExchange.isOpen()) {
+                for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                    if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                        // If its fully completed
+                        if (geItem.getTransferredAmount() != geItem.getAmount()) {
+                            GrandExchange.cancelOffer(geItem.getSlot());
+                            sleep(1000);
+                            GrandExchange.goBack();
+                            sleep(1000);
+                        }
+                        sleepUntil(() -> GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        GrandExchange.collect();
+                        sleep(1000);
+                        sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        return;
                     }
-                    GrandExchange.collect();
-                    sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    return;
                 }
             }
+        } catch (Exception e) {
         }
     }
 

@@ -87,7 +87,6 @@ public class RuneLiteApi {
 
         for (int i = 0; i < apiItemsList.size(); i++) {
             if (apiItemsList.get(i) == null || apiItemsList.get(i).itemID == 0 || apiItemsList.get(i).buyingLimit == 0 || apiItemsList.get(i).itemName.toLowerCase().equals("null") || apiItemsList.get(i).itemValue == 0) {
-                log("Removing item: " + apiItemsList.get(i).itemName + " - null found");
                 apiItemsList.remove(i);
             }
         }

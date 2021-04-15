@@ -38,6 +38,12 @@ public class Main extends AbstractScript {
             sleep((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logging back in!");
             getRandomManager().enableSolver(RandomEvent.LOGIN);
+            sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, 60000);
+
+            if(BotConfig.DISABLE_AUTOLOGIN)
+            {
+                getRandomManager().disableSolver(RandomEvent.LOGIN);
+            }
         }
         return 0;
     }
