@@ -70,7 +70,7 @@ public class Flipper {
                             activeFlips.add(new ActiveFlip(false, amount, flip.item));
                             log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
                         }
-                    } else if (Inventory.contains(flip.item)) {
+                    } else if (Inventory.contains(flip.item.item.itemName)) {
                         // Force sell the rest of the items that weren't sold
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
                         log("Force-selling " + amount + "x " + flip.item.item.itemName);

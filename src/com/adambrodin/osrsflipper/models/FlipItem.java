@@ -2,8 +2,6 @@ package com.adambrodin.osrsflipper.models;
 
 import com.adambrodin.osrsflipper.misc.BotConfig;
 
-import static org.dreambot.api.methods.MethodProvider.log;
-
 public class FlipItem {
     public ApiItem item;
     public int avgLowPrice;
@@ -38,13 +36,17 @@ public class FlipItem {
         }
 
         // Increases score if the item has had more trading volume (more likely to successfully flip)
-        if(averagedVolume >= BotConfig.ITEM_VOLUME_GREAT)
-        {
+        if (averagedVolume >= BotConfig.ITEM_VOLUME_GREAT) {
+            score += potentialProfitGp * 5;
+        }
+
+        // If the item has great volume margins (more likely to flip faster)
+        if (averagedVolume >= (item.buyingLimit) * 10) {
             score += potentialProfitGp * 5;
         }
 
         //log(item.itemName + " - " + "Available gp: " + availableGp + "gp - AvgLowPrice: " + avgLowPrice + "gp - Margin gp:" + marginGp + "gp" + " - remaining limit: "
-            //   + remainingBuyingLimit + " potential profit: " + potentialProfitGp +"gp - perf. score: " +score);
+        //   + remainingBuyingLimit + " potential profit: " + potentialProfitGp +"gp - perf. score: " +score);
         return (int) score;
     }
 }
