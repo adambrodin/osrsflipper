@@ -61,7 +61,7 @@ public class FlipFinder {
                 if (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP) {
                     for (ActiveFlip flip : Flipper.activeFlips) {
                         // Prevent the same item being flipped multiple times
-                        if (flip.item.item.itemName.equals(apiItem.itemName)) {
+                        if (flip.item.item.itemName.toLowerCase().contains(apiItem.itemName.toLowerCase())) {
                             itemAlreadyFlipping = true;
                             break;
                         }
