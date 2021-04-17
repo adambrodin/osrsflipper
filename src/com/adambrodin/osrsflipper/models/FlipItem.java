@@ -11,7 +11,6 @@ public class FlipItem {
 
     public int potentialProfitGp;
     public int maxAmountAvailable;
-    public int currentProfit;
 
     public FlipItem(ApiItem item, int avgLowPrice, float marginPerc, int marginGp, float averagedVolume) {
         this.item = item;

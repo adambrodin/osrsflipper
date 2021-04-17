@@ -55,9 +55,9 @@ public class Flipper {
                 log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - (SECONDS: " + (System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000 + ")");
 
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || GEController.GetCompletedPercentage(flip.item) >= 95) {
-                    int itemAmountInInventory = 0;
-                    if (Inventory.contains(flip.item.item.itemName)) {
-                        itemAmountInInventory = Inventory.get(flip.item.item.itemName).getAmount();
+                    int profit = 0;
+                    if (!flip.buy) {
+                        profit = GEController.GetSlotGoldAmount(flip.item);
                     }
 
                     // Collect all items
@@ -69,8 +69,6 @@ public class Flipper {
                     // If inventory has item (may not have any if flip did not change at all (0% completion))
                     if (flip.buy && Inventory.contains(flip.item.item.itemName)) {
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
-                        // Subtract the cost of the bought items
-                        flip.item.currentProfit -= (Math.abs(itemAmountInInventory - amount) - flip.item.avgLowPrice);
                         int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                         if (tradeCreated) {
@@ -84,23 +82,20 @@ public class Flipper {
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
                         boolean finalTradeCreated = tradeCreated;
                         sleepUntil(() -> finalTradeCreated && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
-
-                        // Add the profit of the items
-                        flip.item.currentProfit += GEController.GetSlotGoldAmount(flip.item);
+                        profit = GEController.GetSlotGoldAmount(flip.item) - (amount * flip.item.avgLowPrice);
                         sleep(2000);
                         GrandExchange.collect();
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     } else {
-                        // All items were sold, add the profit
-                        flip.item.currentProfit += (flip.amount * (flip.item.avgLowPrice + flip.item.marginGp));
                         tradeCreated = true;
+                        profit -= (flip.amount * flip.item.avgLowPrice);
                     }
 
                     if (tradeCreated) {
                         // Display the profit
-                        IngameGUI.sessionProfit += flip.item.currentProfit;
-                        log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + flip.item.currentProfit + " gp");
+                        IngameGUI.sessionProfit += profit;
+                        log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
                         activeFlips.remove(flip);
                     }
                 }

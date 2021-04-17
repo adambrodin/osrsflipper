@@ -65,7 +65,7 @@ public class RuneLiteApi {
                     PriceData pd = priceData.getValue();
                     MarketData md = marketData.getValue();
 
-                    if (priceData.getKey() == 0 || pd.highPrice == 0 || pd.lowPrice == 0 || pd.highPriceTime == 0 || pd.lowPriceTime == 0 || md.highPriceVolume == 0 || md.lowPriceVolume == 0) {
+                    if (priceData.getKey() == 0 || pd.highPrice == 0 || pd.lowPrice == 0 || pd.highPriceTime == 0 || pd.lowPriceTime == 0 || md.highPriceVolume == 0 || md.lowPriceVolume == 0 || pd.highPrice == pd.lowPrice) {
                         continue;
                     }
                     pd.highPriceVolume = md.highPriceVolume;
