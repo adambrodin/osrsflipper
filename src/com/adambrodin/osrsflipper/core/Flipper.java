@@ -1,5 +1,6 @@
 package com.adambrodin.osrsflipper.core;
 
+import com.adambrodin.osrsflipper.gui.IngameGUI;
 import com.adambrodin.osrsflipper.logic.FlipFinder;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
@@ -27,14 +28,13 @@ public class Flipper {
             }
 
             if (!Inventory.contains("Coins") || cashInInventory < BotConfig.MIN_GOLD_FOR_FLIP) {
-                log("Too little cash to execute new flips! - Amount in inventory: " + cashInInventory + "gp");
+                IngameGUI.currentAction = "Too little cash to execute new flips!";
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 //int availableGp = (int) ((double) cashInInventory * (double) (BotConfig.MAX_CASHSTACK_PERCENTAGE_PER_FLIP/100)); TODO FIX CALCULATION
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP) {
-                    availableGp = (int) (cashInInventory * 0.8);
+                    availableGp = (int) (cashInInventory * 0.7);
                 }
-                log("Available cash: " + availableGp + "gp");
 
                 FlipItem bestItem = flipFinder.GetBestMarginItem(availableGp);
                 log("Best item: " + bestItem.item.itemName + " at " + bestItem.marginPerc + "% margin - " + bestItem.marginGp + "gp - potential profit: " + bestItem.potentialProfitGp + "gp"
@@ -43,7 +43,7 @@ public class Flipper {
             }
         }
 
-        sleep(2500);
+        sleep(5000);
     }
 
     private static void CheckFlips() {
@@ -51,19 +51,26 @@ public class Flipper {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
 
-                float activeTimeMinutes = ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
+                float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
                 log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - (SECONDS: " + (System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000 + ")");
 
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || GEController.GetCompletedPercentage(flip.item) >= 95) {
+                    int itemAmountInInventory = 0;
+                    if (Inventory.contains(flip.item.item.itemName)) {
+                        itemAmountInInventory = Inventory.get(flip.item.item.itemName).getAmount();
+                    }
+
                     // Collect all items
                     GEController.CollectItem(flip.item);
                     sleep(2500);
 
                     boolean tradeCreated = false;
 
-                    // If inventory has item (may not have it if flip did not change at all (0% completion))
+                    // If inventory has item (may not have any if flip did not change at all (0% completion))
                     if (flip.buy && Inventory.contains(flip.item.item.itemName)) {
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                        // Subtract the cost of the bought items
+                        flip.item.currentProfit -= (Math.abs(itemAmountInInventory - amount) - flip.item.avgLowPrice);
                         int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                         if (tradeCreated) {
@@ -77,15 +84,23 @@ public class Flipper {
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
                         boolean finalTradeCreated = tradeCreated;
                         sleepUntil(() -> finalTradeCreated && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
+
+                        // Add the profit of the items
+                        flip.item.currentProfit += GEController.GetSlotGoldAmount(flip.item);
                         sleep(2000);
                         GrandExchange.collect();
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     } else {
+                        // All items were sold, add the profit
+                        flip.item.currentProfit += (flip.amount * (flip.item.avgLowPrice + flip.item.marginGp));
                         tradeCreated = true;
                     }
 
                     if (tradeCreated) {
+                        // Display the profit
+                        IngameGUI.sessionProfit += flip.item.currentProfit;
+                        log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + flip.item.currentProfit + " gp");
                         activeFlips.remove(flip);
                     }
                 }

@@ -33,7 +33,7 @@ public class GEController {
 
         if (tradeCreated) {
             ActiveFlip flip = new ActiveFlip(buy, amount, item);
-            log("Added new active flip (BUY)" + ": " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
+            log("Added new active flip (BUY: " + buy + "): " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
             Flipper.activeFlips.add(flip);
             sleep(1000);
             sleepUntil(() -> ItemInSlot(item), BotConfig.MAX_ACTION_TIMEOUT_MS);
@@ -115,5 +115,20 @@ public class GEController {
 
         // Item not found
         return -1;
+    }
+
+    public static int GetSlotGoldAmount(FlipItem item)
+    {
+        try {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                    return geItem.getTransferredValue();
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        // Item not found
+        return 0;
     }
 }
