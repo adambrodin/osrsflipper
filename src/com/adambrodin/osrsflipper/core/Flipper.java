@@ -32,7 +32,7 @@ public class Flipper {
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 //int availableGp = (int) ((double) cashInInventory * (double) (BotConfig.MAX_CASHSTACK_PERCENTAGE_PER_FLIP/100)); TODO FIX CALCULATION
                 int availableGp = cashInInventory;
-                if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP) {
+                if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
                     availableGp = (int) (cashInInventory * 0.7);
                 }
 

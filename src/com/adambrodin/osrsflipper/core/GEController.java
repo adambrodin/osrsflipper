@@ -117,8 +117,7 @@ public class GEController {
         return -1;
     }
 
-    public static int GetSlotGoldAmount(FlipItem item)
-    {
+    public static int GetSlotGoldAmount(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                 if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
@@ -130,5 +129,19 @@ public class GEController {
 
         // Item not found
         return 0;
+    }
+
+    public static int GetAvailableSlotsAmount() {
+        int availableSlots = 8;
+        try {
+                for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                    if (geItem != null) {
+                        availableSlots--;
+                    }
+                }
+        } catch (Exception e) {
+        }
+
+        return availableSlots;
     }
 }
