@@ -37,7 +37,7 @@ public class AccountSetup {
     }
 
     private static void PrepareForTrading() {
-        if (!bankIsChecked || !Inventory.contains("Coins")) {
+        if (!bankIsChecked) {
             if (NPCs.closest("Banker") != null) {
                 NPCs.closest("Banker").interact("Bank");
             } else if (Bank.getBank() != null) {

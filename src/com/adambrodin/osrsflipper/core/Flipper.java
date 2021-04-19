@@ -55,9 +55,6 @@ public class Flipper {
 
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || GEController.GetCompletedPercentage(flip.item) >= 95) {
                     int profit = 0;
-                    if (!flip.buy) {
-                        profit = GEController.GetSlotGoldAmount(flip.item);
-                    }
 
                     // Collect all items
                     GEController.CollectItem(flip.item);
