@@ -107,7 +107,7 @@ public class GEController {
                         return 0;
                     }
 
-                    return (geItem.getTransferredAmount() / geItem.getAmount()) * 100;
+                    return ((float)geItem.getTransferredAmount() / (float)geItem.getAmount()) * 100;
                 }
             }
         } catch (Exception e) {
