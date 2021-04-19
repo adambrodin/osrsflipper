@@ -24,6 +24,7 @@ public class BotConfig {
     public static final float MIN_ITEM_MARGIN_PERCENTAGE = 1; // Min margin for an item to be considered
     public static final float MIN_ITEM_MARGIN_GP = 1;
     public static final float MIN_ITEM_VOLUME = 20000; // Min volume for an item in the endpoint timespan
+    public static final int MIN_ITEM_PRICE_FOR_CUT = 100;
 
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);

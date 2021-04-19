@@ -15,17 +15,17 @@ public class GEController {
 
         if (buy) {
             int price = item.avgLowPrice;
-            if (BotConfig.CUT_PRICES) {
+            if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Increase the price slightly to overcut
-                price += Math.round(item.marginGp / 10);
+                price += Math.round(item.marginGp / 5);
             }
 
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
         } else {
             int price = item.avgLowPrice + item.marginGp;
-            if (BotConfig.CUT_PRICES) {
+            if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Decrease the price slightly to undercut
-                price -= Math.round(item.marginGp / 10);
+                price -= Math.round(item.marginGp / 5);
             }
 
             tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);
@@ -134,11 +134,11 @@ public class GEController {
     public static int GetAvailableSlotsAmount() {
         int availableSlots = 8;
         try {
-                for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                    if (geItem.getItem() != null) {
-                        availableSlots--;
-                    }
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem.getItem() != null) {
+                    availableSlots--;
                 }
+            }
         } catch (Exception e) {
         }
 
