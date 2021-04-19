@@ -135,7 +135,7 @@ public class GEController {
         int availableSlots = 8;
         try {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                    if (geItem != null) {
+                    if (geItem.getItem() != null) {
                         availableSlots--;
                     }
                 }

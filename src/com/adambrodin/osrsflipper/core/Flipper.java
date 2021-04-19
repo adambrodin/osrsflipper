@@ -88,7 +88,6 @@ public class Flipper {
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     } else {
                         tradeCreated = true;
-                        profit -= (flip.amount * flip.item.avgLowPrice);
                     }
 
                     if (tradeCreated) {
