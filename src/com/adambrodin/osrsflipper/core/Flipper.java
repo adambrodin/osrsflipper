@@ -51,7 +51,7 @@ public class Flipper {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
-                log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - (SECONDS: " + (System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000 + ") - " + GEController.GetCompletedPercentage(flip.item)+"%");
+                log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - (SECONDS: " + (System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000 + ") - " + GEController.GetCompletedPercentage(flip.item) + "%");
 
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || GEController.GetCompletedPercentage(flip.item) >= 95) {
                     int profit = 0;
@@ -88,10 +88,12 @@ public class Flipper {
                     }
 
                     if (tradeCreated) {
-                        // Display the profit
-                        IngameGUI.sessionProfit += profit;
-                        log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
-                        activeFlips.remove(flip);
+                        if (!Inventory.contains(flip.item.item.itemName)) {
+                            // Display the profit
+                            IngameGUI.sessionProfit += profit;
+                            log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                            activeFlips.remove(flip);
+                        }
                     }
                 }
             }
