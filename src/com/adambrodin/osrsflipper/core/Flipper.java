@@ -88,12 +88,12 @@ public class Flipper {
                     }
 
                     if (tradeCreated) {
-                        if (!Inventory.contains(flip.item.item.itemName)) {
+                        //if (!Inventory.contains(flip.item.item.itemName)) {
                             // Display the profit
                             IngameGUI.sessionProfit += profit;
                             log("Flip [BUY: " + flip.buy + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
                             activeFlips.remove(flip);
-                        }
+                       // }
                     }
                 }
             }

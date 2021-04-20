@@ -106,7 +106,6 @@ public class GEController {
                     if (geItem.getTransferredAmount() <= 0) {
                         return 0;
                     }
-
                     return ((float)geItem.getTransferredAmount() / (float)geItem.getAmount()) * 100;
                 }
             }
