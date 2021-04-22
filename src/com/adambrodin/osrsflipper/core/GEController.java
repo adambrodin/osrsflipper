@@ -54,11 +54,11 @@ public class GEController {
     }
 
     // Returns the amount of items from slot
-    public static void CollectItem(FlipItem item) {
+    public static void CollectItem(FlipItem item, boolean isBuy) {
         try {
             if (GrandExchange.isOpen()) {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                    if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                    if (geItem != null && geItem.getItem().getName().equals(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
                         if (GetCompletedPercentage(item) < 100) {
                             GrandExchange.cancelOffer(geItem.getSlot());

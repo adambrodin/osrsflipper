@@ -57,20 +57,26 @@ public class Flipper {
                     int profit = 0;
 
                     // Collect all items
-                    GEController.CollectItem(flip.item);
+                    GEController.CollectItem(flip.item, flip.buy);
                     sleep(2500);
 
-                    boolean tradeCreated = false;
+                    boolean tradeCreated;
 
-                    // If inventory has item (may not have any if flip did not change at all (0% completion))
-                    if (flip.buy && Inventory.contains(flip.item.item.itemName)) {
-                        int amount = Inventory.get(flip.item.item.itemName).getAmount();
-                        int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
-                        tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
-                        if (tradeCreated) {
-                            activeFlips.add(new ActiveFlip(false, amount, flip.item));
-                            log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
+                    // If the flip is a buy
+                    if (flip.buy) {
+                        if(Inventory.contains(flip.item.item.itemName)) {
+                            int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                            int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
+                            log("Selling " + amount + "x " + flip.item.item.itemName);
+                            tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
+                            if (tradeCreated) {
+                                activeFlips.add(new ActiveFlip(false, amount, flip.item));
+                                log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
+                            }
+                        }else {
+                            tradeCreated = true;
                         }
+                        // If the flip is a sell and the inventory still contains the item
                     } else if (Inventory.contains(flip.item.item.itemName)) {
                         // Force sell the rest of the items that weren't sold
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
@@ -78,12 +84,11 @@ public class Flipper {
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
                         boolean finalTradeCreated = tradeCreated;
                         sleepUntil(() -> finalTradeCreated && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                        profit = GEController.GetSlotGoldAmount(flip.item) - (amount * flip.item.avgLowPrice);
                         sleep(2000);
                         GrandExchange.collect();
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    } else {
+                    } else { // All items were fully sold, simply remove flip
                         tradeCreated = true;
                     }
 
