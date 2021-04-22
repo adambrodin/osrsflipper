@@ -3,6 +3,7 @@ package com.adambrodin.osrsflipper.core;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
+import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.grandexchange.GrandExchangeItem;
 
@@ -11,7 +12,7 @@ import static org.dreambot.api.methods.MethodProvider.*;
 public class GEController {
     // Buy/sell in the GE
     public static void TransactItem(FlipItem item, boolean buy, int amount) {
-        boolean tradeCreated = false;
+        boolean tradeCreated;
 
         if (buy) {
             int price = item.avgLowPrice;
@@ -47,7 +48,6 @@ public class GEController {
                     return true;
                 }
             } catch (Exception e) {
-                //log("ItemInSlot: " + e.getMessage());
             }
         }
         return false;
@@ -60,7 +60,7 @@ public class GEController {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                     if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
                         // If its fully completed
-                        if (geItem.getTransferredAmount() != geItem.getAmount()) {
+                        if (GetCompletedPercentage(item) < 100) {
                             GrandExchange.cancelOffer(geItem.getSlot());
                             sleep(1000);
                             GrandExchange.goBack();
@@ -69,7 +69,7 @@ public class GEController {
                         sleepUntil(() -> GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                         GrandExchange.collect();
                         sleep(1000);
-                        sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()) && Inventory.contains(item.item.itemName), BotConfig.MAX_ACTION_TIMEOUT_MS);
                         return;
                     }
                 }
