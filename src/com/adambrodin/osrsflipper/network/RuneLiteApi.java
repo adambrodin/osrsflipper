@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.dreambot.api.methods.MethodProvider.log;
-
 public class RuneLiteApi {
     public static String GetJsonString(String endPoint) {
         URL url = null;
