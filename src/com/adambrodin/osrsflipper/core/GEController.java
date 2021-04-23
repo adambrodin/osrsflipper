@@ -33,11 +33,13 @@ public class GEController {
         }
 
         if (tradeCreated) {
-            ActiveFlip flip = new ActiveFlip(buy, amount, item);
-            log("Added new active flip (BUY: " + buy + "): " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
-            Flipper.activeFlips.add(flip);
+            sleepUntil(() -> GEController.ItemInSlot(item), 5000);
+            if (GEController.ItemInSlot(item)) {
+                ActiveFlip flip = new ActiveFlip(buy, amount, item);
+                log("Added new active flip (BUY: " + buy + "): " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
+                Flipper.activeFlips.add(flip);
+            }
             sleep(1000);
-            sleepUntil(() -> ItemInSlot(item), BotConfig.MAX_ACTION_TIMEOUT_MS);
         }
     }
 
@@ -106,7 +108,7 @@ public class GEController {
                     if (geItem.getTransferredAmount() <= 0) {
                         return 0;
                     }
-                    return ((float)geItem.getTransferredAmount() / (float)geItem.getAmount()) * 100;
+                    return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
                 }
             }
         } catch (Exception e) {
@@ -142,5 +144,19 @@ public class GEController {
         }
 
         return availableSlots;
+    }
+
+    public static int GetSlotFromItem(FlipItem item) {
+        try {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                    return geItem.getSlot();
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        // Item not found
+        return -1;
     }
 }

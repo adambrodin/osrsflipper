@@ -31,7 +31,6 @@ public class Flipper {
             if (!Inventory.contains("Coins") || cashInInventory < BotConfig.MIN_GOLD_FOR_FLIP) {
                 IngameGUI.currentAction = "Too little cash to execute new flips!";
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
-                //int availableGp = (int) ((double) cashInInventory * (double) (BotConfig.MAX_CASHSTACK_PERCENTAGE_PER_FLIP/100)); TODO FIX CALCULATION
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
                     availableGp = (int) (cashInInventory * 0.7);
@@ -52,7 +51,7 @@ public class Flipper {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
-                log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - (SECONDS: " + (System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000 + ") - " + GEController.GetCompletedPercentage(flip.item) + "%");
+                log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - " + GEController.GetCompletedPercentage(flip.item) + "% completed");
 
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95) {
