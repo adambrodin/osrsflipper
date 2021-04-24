@@ -111,6 +111,18 @@ public class GEController {
         }
 
         log("Couldn't get completed percentage for item " + item.item.itemName + " - not found!");
+        String printStr = "";
+        try {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem != null) {
+                    printStr += (geItem.getName() + " - " + geItem.getItem().getName()) + " - ";
+                }
+            }
+        } catch (Exception e) {
+            log(e.getMessage());
+        }
+        log(printStr);
+        sleep(2000);
 
         // Item not found
         return -1;

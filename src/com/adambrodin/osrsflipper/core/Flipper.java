@@ -29,7 +29,7 @@ public class Flipper {
             }
 
             if (!Inventory.contains("Coins") || cashInInventory < BotConfig.MIN_GOLD_FOR_FLIP) {
-                IngameGUI.currentAction = "Too little cash to execute new flips!";
+                IngameGUI.currentAction = "Too little cash to flip!";
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
@@ -51,8 +51,8 @@ public class Flipper {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
-
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);
+
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95) {
                     IngameGUI.currentAction = "Cancelling - " + flip.item.item.itemName;
                     int profit = 0;
@@ -72,7 +72,9 @@ public class Flipper {
                             tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                             if (tradeCreated) {
                                 sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                                activeFlips.add(new ActiveFlip(false, amount, flip.item));
+                                ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
+                                sellFlip.item.potentialProfitGp = amount * sellPrice;
+                                activeFlips.add(sellFlip);
                                 log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
                             }
                         } else { // All items were fully bought, simply remove flip
@@ -98,9 +100,11 @@ public class Flipper {
                     }
 
                     if (tradeCreated) {
-                        // Display the profit
-                        IngameGUI.sessionProfit += profit;
-                        log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                        if (!flip.buy) {
+                            // Display the profit
+                            IngameGUI.sessionProfit += profit;
+                            log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                        }
                         activeFlips.remove(flip);
                     }
                 }
