@@ -30,18 +30,18 @@ public class FlipItem {
         score += potentialProfitGp * 10;
 
         // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes which are typically slower)
-        if (marginPerc <= BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
-            score += potentialProfitGp * 3;
+        if (marginPerc > BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
+            score -= potentialProfitGp * 3;
         }
 
         // Increases score if the item has had more trading volume (more likely to successfully flip)
         if (averagedVolume >= BotConfig.ITEM_VOLUME_GREAT) {
-            score += potentialProfitGp * 5;
+            score += potentialProfitGp * 3;
         }
 
         // If the item has great volume margins (more likely to flip faster)
-        if (averagedVolume >= (item.buyingLimit) * 10) {
-            score += potentialProfitGp * 20;
+        if (averagedVolume >= item.buyingLimit * 10) {
+            score += potentialProfitGp * 25;
         }
 
         //log(item.itemName + " - " + "Available gp: " + availableGp + "gp - AvgLowPrice: " + avgLowPrice + "gp - Margin gp:" + marginGp + "gp" + " - remaining limit: "

@@ -51,7 +51,6 @@ public class Flipper {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
-                log(flip.item.item.itemName + " - " + "active time minutes: " + activeTimeMinutes + " - " + GEController.GetCompletedPercentage(flip.item) + "% completed");
 
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95) {
