@@ -40,6 +40,7 @@ public class Main extends AbstractScript {
         } else if (hasLoggedIn) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
             log("Logged out! Waiting " + BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + " minutes before logging back in.");
+            IngameGUI.loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, (BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logging back in!");
             getRandomManager().enableSolver(RandomEvent.LOGIN);

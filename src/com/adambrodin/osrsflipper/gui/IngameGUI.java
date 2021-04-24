@@ -24,6 +24,7 @@ public class IngameGUI {
             new int[]{465, 13},
             new int[]{465, 14}); // Slot eight
     public static boolean hasLoggedIn = false;
+    public static long loggingBackInMillis;
     public static long loggedInMillis;
     public static String currentAction = "Idling...";
     public static int sessionProfit = 0;
@@ -42,6 +43,10 @@ public class IngameGUI {
             g2d.drawString("CURRENT ACTION: " + currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
             g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+
+            if ((loggingBackInMillis - System.currentTimeMillis()) / 1000 >= 0) {
+                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 10, 10);
+            }
 
             DrawGEOverlay(g2d);
         }
