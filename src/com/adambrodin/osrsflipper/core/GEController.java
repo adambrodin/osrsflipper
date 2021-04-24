@@ -43,7 +43,7 @@ public class GEController {
         }
     }
 
-    private static boolean ItemInSlot(FlipItem item) {
+    public static boolean ItemInSlot(FlipItem item) {
         for (GrandExchangeItem geItem : GrandExchange.getItems()) {
             try {
                 if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {

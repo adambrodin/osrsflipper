@@ -45,7 +45,7 @@ public class IngameGUI {
             g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
 
             if ((loggingBackInMillis - System.currentTimeMillis()) / 1000 >= 0) {
-                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 10, 10);
+                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
             }
 
             DrawGEOverlay(g2d);
@@ -65,7 +65,7 @@ public class IngameGUI {
                     g2d.fillRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight() / 4);
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
-                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 4);
+                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 15, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 4);
                     g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
                 }
             }

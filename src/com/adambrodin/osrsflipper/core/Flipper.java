@@ -71,6 +71,7 @@ public class Flipper {
                             log("Selling " + amount + "x " + flip.item.item.itemName);
                             tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                             if (tradeCreated) {
+                                sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
                                 activeFlips.add(new ActiveFlip(false, amount, flip.item));
                                 log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
                             }
