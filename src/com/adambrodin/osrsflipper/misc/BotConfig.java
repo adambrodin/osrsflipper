@@ -20,7 +20,7 @@ public class BotConfig {
     public static final int MIN_CASHSTACK_FOR_PERCENTAGE_FLIP = 200000; // Min amount of gp to only use MAX_CASHSTACK_PERCENTAGE_PER_FLIP instead of 100%
     public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 30;
     public static final float MAX_ITEM_MARGIN_PERCENTAGE = 15; // Max percentage margin for an item to even be considered at all
-    public static final float MAX_VALID_MARGIN_PERCENTAGE = 5; // Maximum percentage for an item to considered normally (this is to minimize items such as runes with 25% margin)
+    public static final float MAX_VALID_MARGIN_PERCENTAGE = 10; // Maximum percentage for an item to considered normally (this is to minimize items such as runes with 25% margin)
     public static final float MIN_ITEM_MARGIN_PERCENTAGE = 1; // Min margin for an item to be considered
     public static final float MIN_ITEM_MARGIN_GP = 1;
     public static final float MIN_ITEM_VOLUME = 20000; // Min volume for an item in the endpoint timespan

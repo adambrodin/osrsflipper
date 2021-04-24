@@ -21,10 +21,9 @@ public class FlipItem {
     }
 
     public int GetPerformanceScore(int availableGp, int remainingBuyingLimit) {
-        float score = 1000;
+        float score = 0;
         // Determines how many items that can be bought based on player gold & current market
         maxAmountAvailable = (int) Math.min(Math.min(remainingBuyingLimit, averagedVolume), (availableGp / avgLowPrice));
-
         potentialProfitGp = maxAmountAvailable * marginGp;
 
         // Increases score, the more the profit is
@@ -42,7 +41,7 @@ public class FlipItem {
 
         // If the item has great volume margins (more likely to flip faster)
         if (averagedVolume >= (item.buyingLimit) * 10) {
-            score += potentialProfitGp * 5;
+            score += potentialProfitGp * 20;
         }
 
         //log(item.itemName + " - " + "Available gp: " + availableGp + "gp - AvgLowPrice: " + avgLowPrice + "gp - Margin gp:" + marginGp + "gp" + " - remaining limit: "

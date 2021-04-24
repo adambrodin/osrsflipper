@@ -50,6 +50,7 @@ public class GEController {
                     return true;
                 }
             } catch (Exception e) {
+                log(e.getMessage());
             }
         }
         return false;
@@ -77,6 +78,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
+            log(e.getMessage());
         }
     }
 
@@ -112,7 +114,10 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
+            log(e.getMessage());
         }
+
+        log("Couldn't get completed percentage for item " + item.item.itemName + " - not found!");
 
         // Item not found
         return -1;
@@ -126,6 +131,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
+            log(e.getMessage());
         }
 
         // Item not found
@@ -141,6 +147,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
+            log(e.getMessage());
         }
 
         return availableSlots;
@@ -154,7 +161,10 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
+            log(e.getMessage());
         }
+
+        log(item.item.itemName + " not found in any slot!");
 
         // Item not found
         return -1;
