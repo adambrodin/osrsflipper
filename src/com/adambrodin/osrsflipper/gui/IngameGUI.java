@@ -65,8 +65,8 @@ public class IngameGUI {
                     g2d.fillRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight() / 4);
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
-                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 2);
-                    g2d.drawString(GEController.GetCompletedPercentage(flip.item) + "% - " + GetFormattedGold(flip.item.potentialProfitGp), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 7);
+                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 4);
+                    g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
                 }
             }
         }
