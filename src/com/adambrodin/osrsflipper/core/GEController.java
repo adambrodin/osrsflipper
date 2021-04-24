@@ -103,13 +103,6 @@ public class GEController {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                 if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
-                    if (geItem.isReadyToCollect()) {
-                        return 100;
-                    }
-
-                    if (geItem.getTransferredAmount() <= 0) {
-                        return 0;
-                    }
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
                 }
             }

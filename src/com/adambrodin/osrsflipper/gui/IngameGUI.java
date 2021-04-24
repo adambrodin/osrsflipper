@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.gui;
 
 import com.adambrodin.osrsflipper.core.Flipper;
+import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import org.dreambot.api.methods.widget.Widgets;
@@ -40,7 +41,7 @@ public class IngameGUI {
 
             g2d.drawString("CURRENT ACTION: " + currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
-            g2d.drawString("SESSION PROFIT: " + GetFormattedSessionProfit(), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
 
             DrawGEOverlay(g2d);
         }
@@ -58,7 +59,9 @@ public class IngameGUI {
                     }
                     g2d.fillRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight() / 4);
                     g2d.setColor(Color.BLACK);
-                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 5, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 5);
+                    g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
+                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 2);
+                    g2d.drawString(GEController.GetCompletedPercentage(flip.item) + "% - " + GetFormattedGold(flip.item.potentialProfitGp), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 7);
                 }
             }
         }
@@ -80,7 +83,7 @@ public class IngameGUI {
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
-    private static String GetFormattedSessionProfit() {
-        return NumberFormat.getInstance(Locale.US).format(sessionProfit) + " gp";
+    private static String GetFormattedGold(int gold) {
+        return NumberFormat.getInstance(Locale.US).format(gold) + " gp";
     }
 }

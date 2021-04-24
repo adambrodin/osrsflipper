@@ -47,5 +47,5 @@ public class BotConfig {
     public static final int OVERLAY_TEXT_X_OFFSET = 3;
     public static final int OVERLAY_TEXT_Y_OFFSET = 25;
     public static final Font OVERLAY_FONT = new Font("Consolas", Font.BOLD, 20);
-    public static final Font SLOT_OVERLAY_FONT = new Font("Consolas", Font.BOLD, 8);
+    public static final Font SLOT_OVERLAY_FONT = new Font("Consolas", Font.BOLD, 10);
 }

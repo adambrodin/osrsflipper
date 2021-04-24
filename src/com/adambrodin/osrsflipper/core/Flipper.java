@@ -82,6 +82,7 @@ public class Flipper {
                     } else if (Inventory.contains(flip.item.item.itemName)) {
                         // Force sell the rest of the items that weren't sold
                         int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                        profit += (flip.amount - amount) * flip.item.marginGp;
                         log("Force-selling " + amount + "x " + flip.item.item.itemName);
                         tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
                         boolean finalTradeCreated = tradeCreated;
@@ -91,6 +92,7 @@ public class Flipper {
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     } else if (completedPercentage >= 100) { // All items were fully sold, simply remove flip
+                        profit += flip.amount * flip.item.marginGp;
                         log("Flip (" + flip.item.item.itemName + ") was fully sold, removing!");
                         tradeCreated = true;
                     }
