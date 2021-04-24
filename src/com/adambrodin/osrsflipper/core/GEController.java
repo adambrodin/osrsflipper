@@ -102,7 +102,7 @@ public class GEController {
     public static float GetCompletedPercentage(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
                 }
             }
