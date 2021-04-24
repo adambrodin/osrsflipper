@@ -44,7 +44,7 @@ public class IngameGUI {
 
             g2d.drawString("CURRENT ACTION: " + currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
-            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
 
             if (hasLoggedIn && Client.getGameState() == GameState.LOGIN_SCREEN) {
                 g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
@@ -68,7 +68,7 @@ public class IngameGUI {
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
                     g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + widget.getWidth() / 2, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 4);
-                    g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
+                    g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp, true), widget.getX() + 1, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
                 }
             }
         }
@@ -90,7 +90,11 @@ public class IngameGUI {
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
-    private static String GetFormattedGold(int gold) {
-        return NumberFormat.getInstance(Locale.US).format(gold) + " gp";
+    private static String GetFormattedGold(int gold, boolean roundToThousands) {
+        if (roundToThousands) {
+            gold /= 1000;
+        }
+
+        return NumberFormat.getInstance(Locale.US).format(gold) + (roundToThousands ? "K" : "") + " gp";
     }
 }
