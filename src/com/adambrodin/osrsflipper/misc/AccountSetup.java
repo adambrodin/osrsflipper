@@ -9,8 +9,7 @@ import org.dreambot.api.methods.walking.impl.Walking;
 import org.dreambot.api.wrappers.interactive.NPC;
 
 import static org.dreambot.api.Client.getLocalPlayer;
-import static org.dreambot.api.methods.MethodProvider.logError;
-import static org.dreambot.api.methods.MethodProvider.sleepUntil;
+import static org.dreambot.api.methods.MethodProvider.*;
 
 public class AccountSetup {
     private static boolean bankIsChecked = false;
@@ -47,10 +46,12 @@ public class AccountSetup {
             }
 
             sleepUntil(Bank::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
+            sleep(500);
             Bank.depositAllExcept("Coins");
             sleepUntil(() -> Inventory.onlyContains("Coins") || Inventory.getEmptySlots() == 28, BotConfig.MAX_ACTION_TIMEOUT_MS);
             if (Bank.contains("Coins")) {
                 Bank.withdrawAll("Coins");
+                sleep(500);
             }
             sleepUntil(() -> Inventory.contains("Coins"), BotConfig.MAX_ACTION_TIMEOUT_MS);
             Bank.close();
@@ -63,6 +64,7 @@ public class AccountSetup {
             if (clerk != null) {
                 clerk.interact("Exchange");
                 sleepUntil(() -> GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                sleep(500);
             }
         }
     }

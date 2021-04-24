@@ -44,8 +44,6 @@ public class FlipItem {
             score += potentialProfitGp * 25;
         }
 
-        //log(item.itemName + " - " + "Available gp: " + availableGp + "gp - AvgLowPrice: " + avgLowPrice + "gp - Margin gp:" + marginGp + "gp" + " - remaining limit: "
-        //   + remainingBuyingLimit + " potential profit: " + potentialProfitGp +"gp - perf. score: " +score);
         return (int) score;
     }
 }
