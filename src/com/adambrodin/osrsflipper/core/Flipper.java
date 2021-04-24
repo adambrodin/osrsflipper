@@ -77,7 +77,7 @@ public class Flipper {
                                 activeFlips.add(sellFlip);
                                 log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
                             }
-                        } else { // All items were fully bought, simply remove flip
+                        } else if(!GEController.ItemInSlot(flip.item)){ // All items were fully bought, simply remove flip
                             tradeCreated = true;
                         }
                         // If the flip is a sell and the inventory still contains the item
@@ -93,7 +93,7 @@ public class Flipper {
                         GrandExchange.collect();
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    } else if (completedPercentage >= 100) { // All items were fully sold, simply remove flip
+                    } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
                         profit += flip.amount * flip.item.marginGp;
                         log("Flip (" + flip.item.item.itemName + ") was fully sold, removing!");
                         tradeCreated = true;
