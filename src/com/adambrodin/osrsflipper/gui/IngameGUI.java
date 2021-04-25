@@ -45,6 +45,7 @@ public class IngameGUI {
             g2d.drawString("CURRENT ACTION: " + currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
             g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+            g2d.drawString("GP/HOUR: " + GetFormattedGold(sessionProfit/(GetTimeSeconds(loggedInMillis) / 3600),true), x+BotConfig.OVERLAY_TEXT_X_OFFSET, y+BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
 
             if (hasLoggedIn && Client.getGameState() == GameState.LOGIN_SCREEN) {
                 g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
