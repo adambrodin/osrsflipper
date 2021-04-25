@@ -159,6 +159,7 @@ public class GEController {
         }
 
         log(item.item.itemName + " not found in any slot!");
+        sleep(2000);
 
         // Item not found
         return -1;
