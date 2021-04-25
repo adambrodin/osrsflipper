@@ -95,7 +95,7 @@ public class Flipper {
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
                         profit += flip.amount * flip.item.marginGp;
-                        log("Flip (" + flip.item.item.itemName + ") was fully sold, removing!");
+                        log("Flip (" + flip.item.item.itemName + ") is fully sold, removing!");
                         tradeCreated = true;
                     }
 
