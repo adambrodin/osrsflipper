@@ -1,5 +1,6 @@
 package com.adambrodin.osrsflipper.core;
 
+import com.adambrodin.osrsflipper.gui.IngameGUI;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
@@ -101,8 +102,9 @@ public class GEController {
 
     public static float GetCompletedPercentage(FlipItem item) {
         try {
+            int slot = GetSlotFromItem(item);
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
+                if (geItem != null && geItem.getSlot() == slot) {
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
                 }
             }
@@ -110,8 +112,10 @@ public class GEController {
             log(e.getMessage());
         }
 
-        log("Couldn't get completed percentage for item " + item.item.itemName + " - not found!");
-        sleep(2000);
+        if(IngameGUI.currentAction != "Couldn't get completed percentage for: " + item.item.itemName+"!")
+        {
+            IngameGUI.currentAction = "Couldn't get completed percentage for: " + item.item.itemName+"!";
+        }
 
         // Item not found
         return -1;
@@ -120,7 +124,7 @@ public class GEController {
     public static int GetSlotGoldAmount(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return geItem.getTransferredValue();
                 }
             }
@@ -150,7 +154,7 @@ public class GEController {
     public static int GetSlotFromItem(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName) && item.maxAmountAvailable == geItem.getAmount()) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return geItem.getSlot();
                 }
             }
@@ -158,8 +162,10 @@ public class GEController {
             log(e.getMessage());
         }
 
-        log(item.item.itemName + " not found in any slot!");
-        sleep(2000);
+        if(IngameGUI.currentAction != item.item.itemName + " not found in any slot!")
+        {
+            IngameGUI.currentAction = item.item.itemName + " not found in any slot!";
+        }
 
         // Item not found
         return -1;

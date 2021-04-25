@@ -1,5 +1,7 @@
 package com.adambrodin.osrsflipper.misc;
 
+import org.dreambot.api.Client;
+import org.dreambot.api.data.GameState;
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.container.impl.bank.Bank;
@@ -25,7 +27,7 @@ public class AccountSetup {
             sleepUntil(() -> !GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
         }
 
-        if (!IsReadyToTrade()) {
+        if (!IsReadyToTrade() && Client.getGameState() == GameState.LOGGED_IN) {
             PrepareForTrading();
         }
     }
