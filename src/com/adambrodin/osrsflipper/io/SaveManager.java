@@ -10,9 +10,7 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.dreambot.api.methods.MethodProvider.log;
 
@@ -30,6 +28,10 @@ public class SaveManager {
     }
 
     public static void Load() {
+        if (tradingInfo == null) {
+            tradingInfo = new TradingInfo(new ArrayList<>(), new HashMap<>());
+        }
+
         // Sets tradingInfo to data from the file
         SynchronizeFile(BotConfig.SAVED_DATA_FILE_NAME, false, "", SavedType.TradingInfo);
     }
@@ -81,7 +83,7 @@ public class SaveManager {
             log("Attempted to fetch null tradingInfo!");
 
             // Return empty list
-            return Arrays.asList();
+            return Collections.emptyList();
         }
         return tradingInfo.activeFlips;
     }
@@ -105,7 +107,7 @@ public class SaveManager {
     }
 
     public static void AddUsedLimit(FlipItem item, int amount) {
-        tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        tradingInfo.usedBuyingLimits.put(new FlipItem(item.item, item.avgLowPrice, item.marginPerc, item.marginGp, item.averagedVolume), new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
         Save();
         log("Added limit - " + amount + "x " + item.item.itemName);
     }

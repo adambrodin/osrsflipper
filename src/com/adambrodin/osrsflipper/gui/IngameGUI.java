@@ -52,6 +52,10 @@ public class IngameGUI {
                 ;
             }
 
+            if (startingCash > 0) {
+                g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false),x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 5);
+            }
+
             if (hasLoggedIn && Client.getGameState() == GameState.LOGIN_SCREEN) {
                 g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
             }
