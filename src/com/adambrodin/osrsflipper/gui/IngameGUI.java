@@ -107,6 +107,6 @@ public class IngameGUI {
             gold /= 1000;
         }
 
-        return NumberFormat.getInstance(Locale.US).format(gold) + (roundToThousands ? "K" : " gp");
+        return NumberFormat.getInstance(Locale.US).format(gold) + (roundToThousands && gold != 0 ? "K" : " gp");
     }
 }

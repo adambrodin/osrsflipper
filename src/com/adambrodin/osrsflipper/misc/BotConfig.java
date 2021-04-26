@@ -31,7 +31,7 @@ public class BotConfig {
     public static final int MAX_ACTION_TIMEOUT_MS = 5000; // Max time before automatically moving on from a sleepUntil (in case something went wrong, to prevent program getting stuck)
     public static final int LOGOUT_SLEEP_DURATION_MINUTES = 30; // The amount of time to sleep when logged out before logging back in
     // MISC
-    public static final boolean DISABLE_AUTOLOGIN = true;
+    public static final boolean DISABLE_AUTOLOGIN = false;
     public static final int BUYING_LIMIT_HOURS = 4; // The amount of hours to add when saving the used buying limits internally (through io)
     // TRAVELLING
     public static final int MIN_RUNENERGY_ACTIVATE = 3; // The minimum amount of run energy to randomly activate run when walking
