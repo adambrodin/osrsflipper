@@ -77,7 +77,6 @@ public class FlipFinder {
         FlipItem bestItem = null;
         int bestItemPerfScore = 0;
 
-        int consideredItems = 0;
         for (FlipItem item : bestItems) {
             if (bestItem == null) {
                 bestItem = item;
@@ -88,14 +87,13 @@ public class FlipFinder {
                 if (item.GetPerformanceScore(availableGp, item.item.buyingLimit) > bestItemPerfScore) {
                     bestItem = item;
                     bestItemPerfScore = bestItem.GetPerformanceScore(availableGp, bestItem.item.buyingLimit);
-                    consideredItems++;
                 }
             } catch (Exception e) {
                 log("Exception for item " + item.item.itemName + " - " + e.getMessage());
             }
         }
 
-        log("Considered items: " + consideredItems);
+        log("Considered items: " + bestItems.stream().count());
 
         // Return the best item
         return bestItem;

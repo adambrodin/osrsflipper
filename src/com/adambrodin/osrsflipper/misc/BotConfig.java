@@ -35,6 +35,7 @@ public class BotConfig {
 
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = true;
+    public static final int BUYING_LIMIT_HOURS = 4; // The amount of hours to add when saving the used buying limits interrally (through io)
 
     // TRAVELLING
     public static final int MIN_RUNENERGY_ACTIVATE = 3; // The minimum amount of run energy to randomly activate run when walking
@@ -48,4 +49,8 @@ public class BotConfig {
     public static final int OVERLAY_TEXT_Y_OFFSET = 25;
     public static final Font OVERLAY_FONT = new Font("Consolas", Font.BOLD, 20);
     public static final Font SLOT_OVERLAY_FONT = new Font("Consolas", Font.PLAIN, 14);
+
+    // IO
+    public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
+    public static final String SAVED_DATA_FILE_NAME = "OSRS_FLIPPER_DATA.json";
 }

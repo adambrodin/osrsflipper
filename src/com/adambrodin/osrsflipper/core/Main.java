@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.gui.IngameGUI;
+import com.adambrodin.osrsflipper.io.SaveManager;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import org.dreambot.api.Client;
@@ -18,6 +19,10 @@ public class Main extends AbstractScript {
 
     @Override
     public void onStart() {
+        // Load all the saved data/flips/settings etc
+        SaveManager.Load();
+        Flipper.activeFlips = SaveManager.GetSavedFlips();
+
         // Disable auto-login
         if (BotConfig.DISABLE_AUTOLOGIN) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
