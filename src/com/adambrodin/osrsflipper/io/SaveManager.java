@@ -26,12 +26,12 @@ public class SaveManager {
             return;
         }
 
-        SynchronizeFile(BotConfig.SAVED_DATA_PATH, true, gson.toJson(tradingInfo), SavedType.TradingInfo);
+        SynchronizeFile(BotConfig.SAVED_DATA_FILE_NAME, true, gson.toJson(tradingInfo), SavedType.TradingInfo);
     }
 
     public static void Load() {
         // Sets tradingInfo to data from the file
-        SynchronizeFile(BotConfig.SAVED_DATA_PATH, false, "", SavedType.TradingInfo);
+        SynchronizeFile(BotConfig.SAVED_DATA_FILE_NAME, false, "", SavedType.TradingInfo);
     }
 
     private static void SynchronizeFile(String path, boolean write, String json, SavedType savedType) {

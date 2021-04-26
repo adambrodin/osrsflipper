@@ -25,32 +25,26 @@ public class BotConfig {
     public static final float MIN_ITEM_MARGIN_GP = 1;
     public static final float MIN_ITEM_VOLUME = 20000; // Min volume for an item in the endpoint timespan
     public static final int MIN_ITEM_PRICE_FOR_CUT = 100;
-
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);
-
     // TIMEOUTS
     public static final int MAX_ACTION_TIMEOUT_MS = 5000; // Max time before automatically moving on from a sleepUntil (in case something went wrong, to prevent program getting stuck)
     public static final int LOGOUT_SLEEP_DURATION_MINUTES = 30; // The amount of time to sleep when logged out before logging back in
-
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = true;
     public static final int BUYING_LIMIT_HOURS = 4; // The amount of hours to add when saving the used buying limits interrally (through io)
-
     // TRAVELLING
     public static final int MIN_RUNENERGY_ACTIVATE = 3; // The minimum amount of run energy to randomly activate run when walking
     public static final int MAX_RUNENERGY_ACTIVATE = 10; // The maximum amount of run energy to randomly activate run when walking
     public static final int MIN_WALK_CLICK_DELAY_MS = 500; // The minimum amount of delay before clicking the next tile while walking/running
     public static final int MAX_WALK_CLICK_DELAY_MS = 2000; // The maximum amount of delay before clicking the next tile while walking/running
-    public static boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
-
     // GUI
     public static final int OVERLAY_TEXT_X_OFFSET = 3;
     public static final int OVERLAY_TEXT_Y_OFFSET = 25;
     public static final Font OVERLAY_FONT = new Font("Consolas", Font.BOLD, 20);
     public static final Font SLOT_OVERLAY_FONT = new Font("Consolas", Font.PLAIN, 14);
-
     // IO
     public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
-    public static final String SAVED_DATA_FILE_NAME = "OSRS_FLIPPER_DATA.json";
+    public static final String SAVED_DATA_FILE_NAME = SAVED_DATA_PATH + "OSRS_FLIPPER_DATA.json";
+    public static boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
 }
