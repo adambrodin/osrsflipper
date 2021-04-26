@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.gui.IngameGUI;
+import com.adambrodin.osrsflipper.io.SaveManager;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;

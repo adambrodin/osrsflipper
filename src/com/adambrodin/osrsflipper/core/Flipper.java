@@ -34,17 +34,16 @@ public class Flipper {
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
-                    availableGp = (int) (cashInInventory * 0.7);
+                    availableGp = (int) (cashInInventory * 0.65);
                 }
 
                 FlipItem bestItem = flipFinder.GetBestMarginItem(availableGp);
                 log("Best item: " + bestItem.item.itemName + " at " + String.format(String.format("%.2f", bestItem.marginPerc)) + "% margin (" + bestItem.marginGp + "gp) - potential profit: " + bestItem.potentialProfitGp + "gp"
                         + " - avgLowPrice: " + bestItem.avgLowPrice + " - averaged volume: " + bestItem.averagedVolume);
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
+                SaveManager.SaveActiveFlips(activeFlips);
             }
         }
-
-        sleep(5000);
     }
 
     private static void CheckFlips() {

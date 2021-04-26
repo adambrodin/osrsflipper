@@ -39,37 +39,40 @@ public class AccountSetup {
     }
 
     private static void PrepareForTrading() {
-        if (!bankIsChecked) {
-            if (NPCs.closest("Banker") != null && Client.getGameState() == GameState.LOGGED_IN) {
-                NPCs.closest("Banker").interact("Bank");
-            } else if (Bank.getBank() != null) {
-                Bank.openClosest();
-            } else {
-                logError("No bank was found!");
+        try {
+            if (!bankIsChecked) {
+                if (NPCs.closest("Banker") != null) {
+                    NPCs.closest("Banker").interact("Bank");
+                } else if (Bank.getBank() != null) {
+                    Bank.openClosest();
+                } else {
+                    logError("No bank was found!");
+                }
+
+                sleepUntil(Bank::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                sleep(500);
+                Bank.depositAllExcept("Coins");
+                sleepUntil(() -> Inventory.onlyContains("Coins") || Inventory.getEmptySlots() == 28, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                if (Bank.contains("Coins")) {
+                    Bank.withdrawAll("Coins");
+                    sleep(500);
+                }
+                sleepUntil(() -> Inventory.contains("Coins"), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                Bank.close();
+                sleepUntil(() -> !Bank.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                bankIsChecked = true;
+                IngameGUI.startingCash = Inventory.get("Coins").getAmount();
             }
 
-            sleepUntil(Bank::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
-            sleep(500);
-            Bank.depositAllExcept("Coins");
-            sleepUntil(() -> Inventory.onlyContains("Coins") || Inventory.getEmptySlots() == 28, BotConfig.MAX_ACTION_TIMEOUT_MS);
-            if (Bank.contains("Coins")) {
-                Bank.withdrawAll("Coins");
-                sleep(500);
+            if (!GrandExchange.isOpen()) {
+                NPC clerk = NPCs.closest("Grand Exchange Clerk");
+                if (clerk != null) {
+                    clerk.interact("Exchange");
+                    sleepUntil(() -> GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                    sleep(500);
+                }
             }
-            sleepUntil(() -> Inventory.contains("Coins"), BotConfig.MAX_ACTION_TIMEOUT_MS);
-            Bank.close();
-            sleepUntil(() -> !Bank.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-            bankIsChecked = true;
-            IngameGUI.startingCash = Inventory.get("Coins").getAmount();
-        }
-
-        if (!GrandExchange.isOpen() && Client.getGameState() == GameState.LOGGED_IN) {
-            NPC clerk = NPCs.closest("Grand Exchange Clerk");
-            if (clerk != null) {
-                clerk.interact("Exchange");
-                sleepUntil(() -> GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                sleep(500);
-            }
+        } catch (Exception e) {
         }
     }
 
