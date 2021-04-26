@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.dreambot.api.methods.MethodProvider.log;
 
@@ -29,7 +32,7 @@ public class SaveManager {
 
     public static void Load() {
         if (tradingInfo == null) {
-            tradingInfo = new TradingInfo(new ArrayList<>(), new HashMap<>());
+            tradingInfo = new TradingInfo(new ArrayList<ActiveFlip>(), new HashMap<FlipItem, BuyingLimit>());
         }
 
         // Sets tradingInfo to data from the file
@@ -46,7 +49,6 @@ public class SaveManager {
                 outputStream.write(json.getBytes());
                 outputStream.flush();
                 outputStream.close();
-                log("Wrote to " + path);
             } catch (IOException e) {
                 log("IOException when WRITING: (" + e.getMessage() + ")");
             }
@@ -83,7 +85,7 @@ public class SaveManager {
             log("Attempted to fetch null tradingInfo!");
 
             // Return empty list
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return tradingInfo.activeFlips;
     }
@@ -107,7 +109,7 @@ public class SaveManager {
     }
 
     public static void AddUsedLimit(FlipItem item, int amount) {
-        tradingInfo.usedBuyingLimits.put(new FlipItem(item.item, item.avgLowPrice, item.marginPerc, item.marginGp, item.averagedVolume), new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
         Save();
         log("Added limit - " + amount + "x " + item.item.itemName);
     }

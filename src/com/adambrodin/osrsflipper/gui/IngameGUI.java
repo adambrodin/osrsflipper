@@ -53,7 +53,7 @@ public class IngameGUI {
             }
 
             if (startingCash > 0) {
-                g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false),x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 5);
+                g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
             }
 
             if (hasLoggedIn && Client.getGameState() == GameState.LOGIN_SCREEN) {
@@ -78,7 +78,7 @@ public class IngameGUI {
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
                     g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 15, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 3);
-                    g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp, true), widget.getX() + 5, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
+                    g2d.drawString(String.format(String.format("%.2f", GEController.GetCompletedPercentage(flip.item))) + "% - " + GetFormattedGold(flip.item.potentialProfitGp, true), widget.getX() + 7, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 10);
                 }
             } else {
                 flip.slot = GEController.GetSlotFromItem(flip.item);

@@ -38,7 +38,7 @@ public class Flipper {
                 }
 
                 FlipItem bestItem = flipFinder.GetBestMarginItem(availableGp);
-                log("Best item: " + bestItem.item.itemName + " at " + bestItem.marginPerc + "% margin - " + bestItem.marginGp + "gp - potential profit: " + bestItem.potentialProfitGp + "gp"
+                log("Best item: " + bestItem.item.itemName + " at " + String.format(String.format("%.2f", bestItem.marginPerc)) + "% margin - " + bestItem.marginGp + "gp - potential profit: " + bestItem.potentialProfitGp + "gp"
                         + " - avgLowPrice: " + bestItem.avgLowPrice + " - averaged volume: " + bestItem.averagedVolume);
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
             }
