@@ -39,7 +39,7 @@ public class AccountSetup {
 
     private static void PrepareForTrading() {
         if (!bankIsChecked) {
-            if (NPCs.closest("Banker") != null) {
+            if (NPCs.closest("Banker") != null && Client.getGameState() == GameState.LOGGED_IN) {
                 NPCs.closest("Banker").interact("Bank");
             } else if (Bank.getBank() != null) {
                 Bank.openClosest();
@@ -61,7 +61,7 @@ public class AccountSetup {
             bankIsChecked = true;
         }
 
-        if (!GrandExchange.isOpen()) {
+        if (!GrandExchange.isOpen() && Client.getGameState() == GameState.LOGGED_IN) {
             NPC clerk = NPCs.closest("Grand Exchange Clerk");
             if (clerk != null) {
                 clerk.interact("Exchange");
