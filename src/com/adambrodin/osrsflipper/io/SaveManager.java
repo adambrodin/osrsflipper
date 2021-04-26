@@ -11,9 +11,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.dreambot.api.methods.MethodProvider.log;
 
@@ -32,7 +30,7 @@ public class SaveManager {
 
     public static void Load() {
         if (tradingInfo == null) {
-            tradingInfo = new TradingInfo(new ArrayList<ActiveFlip>(), new HashMap<FlipItem, BuyingLimit>());
+            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>());
         }
 
         // Sets tradingInfo to data from the file
@@ -82,7 +80,6 @@ public class SaveManager {
 
     public static List<ActiveFlip> GetSavedFlips() {
         if (tradingInfo == null || tradingInfo.activeFlips.isEmpty()) {
-            log("Attempted to fetch null tradingInfo!");
 
             // Return empty list
             return new ArrayList<>();
@@ -90,17 +87,22 @@ public class SaveManager {
         return tradingInfo.activeFlips;
     }
 
+    public static void SaveActiveFlips(List<ActiveFlip> activeFlips) {
+        tradingInfo.activeFlips = activeFlips;
+        Save();
+    }
+
     public static int GetRemainingLimit(FlipItem item) {
         int maxBuyingLimit = item.item.buyingLimit;
-        for (Map.Entry<FlipItem, BuyingLimit> entry : tradingInfo.usedBuyingLimits.entrySet()) {
-            if (Duration.between(LocalDateTime.now(), entry.getValue().expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
-                tradingInfo.usedBuyingLimits.remove(entry.getKey());
-                log("Removed " + entry.getValue().amountUsed + "x used limit from " + entry.getKey().item.itemName + "! - Surpassed time limit.");
+        for (BuyingLimit limit : tradingInfo.usedBuyingLimits) {
+            if (Duration.between(LocalDateTime.now(), limit.expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
+                tradingInfo.usedBuyingLimits.remove(limit);
+                log("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
                 continue;
             }
 
-            if (entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName)) {
-                maxBuyingLimit -= entry.getValue().amountUsed;
+            if (limit.item.item.itemName.equalsIgnoreCase(item.item.itemName)) {
+                maxBuyingLimit -= limit.amountUsed;
             }
         }
 
@@ -109,18 +111,18 @@ public class SaveManager {
     }
 
     public static void AddUsedLimit(FlipItem item, int amount) {
-        tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        tradingInfo.usedBuyingLimits.add(new BuyingLimit(item, amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
         Save();
         log("Added limit - " + amount + "x " + item.item.itemName);
     }
 
     public static void ModifyLimit(FlipItem item, int amount, int modifyAmount) {
-        tradingInfo.usedBuyingLimits.entrySet().stream().filter(
-                entry -> entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName) && entry.getValue().amountUsed == amount).findFirst().get().getValue().amountUsed += modifyAmount;
+        tradingInfo.usedBuyingLimits.stream().filter(
+                entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().get().amountUsed += modifyAmount;
     }
 
     public static void RemoveLimit(FlipItem item, int amount) {
-        tradingInfo.usedBuyingLimits.entrySet().removeIf(entry -> entry.getValue().amountUsed == amount && entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName));
+        tradingInfo.usedBuyingLimits.removeIf(entry -> entry.amountUsed == amount && entry.item.item.itemName.equalsIgnoreCase(item.item.itemName));
         Save();
         log("Removed limit - " + amount + "x " + item.item.itemName);
     }
