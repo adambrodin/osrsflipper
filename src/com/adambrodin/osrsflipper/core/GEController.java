@@ -1,7 +1,6 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.gui.IngameGUI;
-import com.adambrodin.osrsflipper.io.SaveManager;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
@@ -20,7 +19,7 @@ public class GEController {
             int price = item.avgLowPrice;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Increase the price slightly to overcut
-                price += Math.round(item.marginGp / 5);
+                price += Math.round((float) item.marginGp / 5);
             }
 
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
@@ -28,7 +27,7 @@ public class GEController {
             int price = item.avgLowPrice + item.marginGp;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Decrease the price slightly to undercut
-                price -= Math.round(item.marginGp / 5);
+                price -= Math.round((float) item.marginGp / 5);
             }
 
             tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);
@@ -113,9 +112,8 @@ public class GEController {
             log(e.getMessage());
         }
 
-        if(IngameGUI.currentAction != "Couldn't get completed percentage for: " + item.item.itemName+"!")
-        {
-            IngameGUI.currentAction = "Couldn't get completed percentage for: " + item.item.itemName+"!";
+        if (IngameGUI.currentAction != "Couldn't get completed percentage for: " + item.item.itemName + "!") {
+            IngameGUI.currentAction = "Couldn't get completed percentage for: " + item.item.itemName + "!";
         }
 
         // Item not found
@@ -163,8 +161,7 @@ public class GEController {
             log(e.getMessage());
         }
 
-        if(IngameGUI.currentAction != item.item.itemName + " not found in any slot!")
-        {
+        if (IngameGUI.currentAction != item.item.itemName + " not found in any slot!") {
             IngameGUI.currentAction = item.item.itemName + " not found in any slot!";
         }
 

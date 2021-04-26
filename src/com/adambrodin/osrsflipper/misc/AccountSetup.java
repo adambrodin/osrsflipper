@@ -1,5 +1,6 @@
 package com.adambrodin.osrsflipper.misc;
 
+import com.adambrodin.osrsflipper.core.Flipper;
 import com.adambrodin.osrsflipper.gui.IngameGUI;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
@@ -10,6 +11,9 @@ import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.interactive.NPCs;
 import org.dreambot.api.methods.walking.impl.Walking;
 import org.dreambot.api.wrappers.interactive.NPC;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.dreambot.api.Client.getLocalPlayer;
 import static org.dreambot.api.methods.MethodProvider.*;
@@ -51,8 +55,14 @@ public class AccountSetup {
 
                 sleepUntil(Bank::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
                 sleep(500);
-                Bank.depositAllExcept("Coins");
-                sleepUntil(() -> Inventory.onlyContains("Coins") || Inventory.getEmptySlots() == 28, BotConfig.MAX_ACTION_TIMEOUT_MS);
+
+                // Items that shouldn't be deposited (that are actively flipped)
+                List<String> flipItems = new ArrayList<>();
+                flipItems.add("Coins");
+                Flipper.activeFlips.forEach(flip -> flipItems.add(flip.item.item.itemName));
+
+                Bank.depositAllExcept(i -> flipItems.contains(i.getName()));
+                sleepUntil(() -> Inventory.onlyContains(i -> flipItems.contains(i.getName())) || Inventory.getEmptySlots() == 28, BotConfig.MAX_ACTION_TIMEOUT_MS);
                 if (Bank.contains("Coins")) {
                     Bank.withdrawAll("Coins");
                     sleep(500);
