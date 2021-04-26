@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.logic;
 
 import com.adambrodin.osrsflipper.core.Flipper;
+import com.adambrodin.osrsflipper.io.SaveManager;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.ApiItem;
@@ -84,9 +85,9 @@ public class FlipFinder {
             }
 
             try {
-                if (item.GetPerformanceScore(availableGp, item.item.buyingLimit) > bestItemPerfScore) {
+                if (item.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(item)) > bestItemPerfScore) {
                     bestItem = item;
-                    bestItemPerfScore = bestItem.GetPerformanceScore(availableGp, bestItem.item.buyingLimit);
+                    bestItemPerfScore = bestItem.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(bestItem));
                 }
             } catch (Exception e) {
                 log("Exception for item " + item.item.itemName + " - " + e.getMessage());

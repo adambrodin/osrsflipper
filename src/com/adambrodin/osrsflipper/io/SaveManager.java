@@ -8,7 +8,8 @@ import com.adambrodin.osrsflipper.models.TradingInfo;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.time.LocalTime;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,12 @@ public class SaveManager {
     public static int GetRemainingLimit(FlipItem item) {
         int maxBuyingLimit = item.item.buyingLimit;
         for (Map.Entry<FlipItem, BuyingLimit> entry : tradingInfo.usedBuyingLimits.entrySet()) {
+            if (Duration.between(LocalDateTime.now(), entry.getValue().expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
+                tradingInfo.usedBuyingLimits.remove(entry.getKey());
+                log("Removed " + entry.getValue().amountUsed + "x used limit from " + entry.getKey().item.itemName + "!");
+                continue;
+            }
+
             if (entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName)) {
                 maxBuyingLimit -= entry.getValue().amountUsed;
             }
@@ -98,7 +105,13 @@ public class SaveManager {
     }
 
     public static void AddUsedLimit(FlipItem item, int amount) {
-        tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        log("Added limit - " + amount + "x " + item.item.itemName);
+    }
+
+    public static void RemoveLimit(FlipItem item, int amount) {
+        tradingInfo.usedBuyingLimits.entrySet().removeIf(entry -> entry.getValue().amountUsed == amount && entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName));
+        log("Removed limit - " + amount + "x " + item.item.itemName);
     }
 
     private enum SavedType {
