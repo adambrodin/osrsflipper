@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.models;
 
 import com.adambrodin.osrsflipper.core.GEController;
+import com.adambrodin.osrsflipper.io.SaveManager;
 
 public class ActiveFlip {
     public int slot = -1; // -1 means it hasn't been set yet
@@ -15,5 +16,10 @@ public class ActiveFlip {
         this.item = item;
         this.startedTimeEpochsMs = System.currentTimeMillis();
         this.slot = GEController.GetSlotFromItem(item);
+
+        if (buy) {
+            // Adds & saves the used limit to prevent double purchasing when it isn't possible
+            SaveManager.AddUsedLimit(item, amount);
+        }
     }
 }

@@ -57,7 +57,7 @@ public class SaveManager {
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-                    String receivedString = "";
+                    String receivedString;
                     while ((receivedString = bufferedReader.readLine()) != null) {
                         builder.append(receivedString);
                     }
@@ -91,7 +91,7 @@ public class SaveManager {
         for (Map.Entry<FlipItem, BuyingLimit> entry : tradingInfo.usedBuyingLimits.entrySet()) {
             if (Duration.between(LocalDateTime.now(), entry.getValue().expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
                 tradingInfo.usedBuyingLimits.remove(entry.getKey());
-                log("Removed " + entry.getValue().amountUsed + "x used limit from " + entry.getKey().item.itemName + "!");
+                log("Removed " + entry.getValue().amountUsed + "x used limit from " + entry.getKey().item.itemName + "! - Surpassed time limit.");
                 continue;
             }
 
@@ -106,11 +106,18 @@ public class SaveManager {
 
     public static void AddUsedLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.put(item, new BuyingLimit(amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        Save();
         log("Added limit - " + amount + "x " + item.item.itemName);
+    }
+
+    public static void ModifyLimit(FlipItem item, int amount, int modifyAmount) {
+        tradingInfo.usedBuyingLimits.entrySet().stream().filter(
+                entry -> entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName) && entry.getValue().amountUsed == amount).findFirst().get().getValue().amountUsed += modifyAmount;
     }
 
     public static void RemoveLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.entrySet().removeIf(entry -> entry.getValue().amountUsed == amount && entry.getKey().item.itemName.equalsIgnoreCase(item.item.itemName));
+        Save();
         log("Removed limit - " + amount + "x " + item.item.itemName);
     }
 

@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.core;
 
 import com.adambrodin.osrsflipper.gui.IngameGUI;
+import com.adambrodin.osrsflipper.io.SaveManager;
 import com.adambrodin.osrsflipper.logic.FlipFinder;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
@@ -68,6 +69,9 @@ public class Flipper {
                         if (Inventory.contains(flip.item.item.itemName)) {
                             int amount = Inventory.get(flip.item.item.itemName).getAmount();
                             int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
+
+                            // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
+                            SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
                             log("Selling " + amount + "x " + flip.item.item.itemName);
                             tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                             if (tradeCreated) {
@@ -77,7 +81,9 @@ public class Flipper {
                                 activeFlips.add(sellFlip);
                                 log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
                             }
-                        } else if(!GEController.ItemInSlot(flip.item)){ // All items were fully bought, simply remove flip
+                        } else if (!GEController.ItemInSlot(flip.item)) { // No items were bought, simply remove flip
+                            // Remove used limit (no limit was used)
+                            SaveManager.RemoveLimit(flip.item, flip.amount);
                             tradeCreated = true;
                         }
                         // If the flip is a sell and the inventory still contains the item
