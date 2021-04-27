@@ -71,7 +71,7 @@ public class GEController {
                             GrandExchange.goBack();
                             sleep(1000);
                         }
-                        sleepUntil(() -> GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        sleepUntil(GrandExchange::isReadyToCollect, BotConfig.MAX_ACTION_TIMEOUT_MS);
                         GrandExchange.collect();
                         sleep(1000);
                         sleepUntil(() -> !GrandExchange.isReadyToCollect(geItem.getSlot()) && Inventory.contains(item.item.itemName), BotConfig.MAX_ACTION_TIMEOUT_MS);
@@ -113,27 +113,12 @@ public class GEController {
             log(e.getMessage());
         }
 
-        if (IngameGUI.currentAction != "Couldn't get completed percentage for: " + item.item.itemName + "!") {
+        if (!IngameGUI.currentAction.equals("Couldn't get completed percentage for: " + item.item.itemName + "!")) {
             IngameGUI.currentAction = "Couldn't get completed percentage for: " + item.item.itemName + "!";
         }
 
         // Item not found
         return -1;
-    }
-
-    public static int GetSlotGoldAmount(FlipItem item) {
-        try {
-            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
-                    return geItem.getTransferredValue();
-                }
-            }
-        } catch (Exception e) {
-            log(e.getMessage());
-        }
-
-        // Item not found
-        return 0;
     }
 
     public static int GetAvailableSlotsAmount() {
@@ -162,7 +147,7 @@ public class GEController {
             log(e.getMessage());
         }
 
-        if (IngameGUI.currentAction != item.item.itemName + " not found in any slot!") {
+        if (!IngameGUI.currentAction.equals(item.item.itemName + " not found in any slot!")) {
             IngameGUI.currentAction = item.item.itemName + " not found in any slot!";
         }
 

@@ -16,8 +16,8 @@ import java.util.List;
 import static org.dreambot.api.methods.MethodProvider.*;
 
 public class Flipper {
+    private static final FlipFinder flipFinder = new FlipFinder();
     public static List<ActiveFlip> activeFlips = new ArrayList<>();
-    private static FlipFinder flipFinder = new FlipFinder();
 
     public static void ExecuteFlips() {
         if (AccountSetup.IsReadyToTrade()) {
@@ -37,7 +37,7 @@ public class Flipper {
                     availableGp = (int) (cashInInventory * 0.65);
                 }
 
-                FlipItem bestItem = flipFinder.GetBestMarginItem(availableGp);
+                FlipItem bestItem = flipFinder.GetBestItem(availableGp);
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                 SaveManager.SaveActiveFlips(activeFlips);
             }
@@ -71,15 +71,14 @@ public class Flipper {
 
                                 // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
                                 SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
-                                log("Selling " + amount + "x " + flip.item.item.itemName);
                                 tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
                                 if (tradeCreated) {
                                     sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
                                     ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
-                                    sellFlip.item.maxAmountAvailable = amount;
+                                    sellFlip.amount = amount;
                                     sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
                                     activeFlips.add(sellFlip);
-                                    log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
+                                    log("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
                                 }
                             } else if (!GEController.ItemInSlot(flip.item)) { // No items were bought, simply remove flip
                                 // Remove used limit (no limit was used)
@@ -101,7 +100,7 @@ public class Flipper {
                             sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                         } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
                             profit += flip.amount * flip.item.marginGp;
-                            log("Flip (" + flip.item.item.itemName + ") is fully sold, removing!");
+                            log("Flip [SELL] - (" + flip.amount + "x " + flip.item.item.itemName + ") is fully sold, removing!");
                             tradeCreated = true;
                         }
 
@@ -109,7 +108,7 @@ public class Flipper {
                             if (!flip.buy) {
                                 // Display the profit
                                 IngameGUI.sessionProfit += profit;
-                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                             }
                             activeFlips.remove(flip);
                         }

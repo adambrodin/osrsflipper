@@ -26,6 +26,7 @@ public class RuneLiteApi {
 
         try {
             HttpURLConnection connection = (HttpURLConnection) (url != null ? url.openConnection() : null);
+            assert connection != null;
             connection.setRequestMethod("GET");
             connection.setRequestProperty("User-Agent", BotConfig.API_USER_AGENT);
 
@@ -84,7 +85,7 @@ public class RuneLiteApi {
         ArrayList<ApiItem> apiItemsList = new ArrayList<>(Arrays.asList(apiItems));
 
         for (int i = 0; i < apiItemsList.size(); i++) {
-            if (apiItemsList.get(i) == null || apiItemsList.get(i).itemID == 0 || apiItemsList.get(i).buyingLimit == 0 || apiItemsList.get(i).itemName.toLowerCase().equals("null") || apiItemsList.get(i).itemValue == 0) {
+            if (apiItemsList.get(i) == null || apiItemsList.get(i).itemID == 0 || apiItemsList.get(i).buyingLimit == 0 || apiItemsList.get(i).itemName.equalsIgnoreCase("null") || apiItemsList.get(i).itemValue == 0) {
                 apiItemsList.remove(i);
             }
         }

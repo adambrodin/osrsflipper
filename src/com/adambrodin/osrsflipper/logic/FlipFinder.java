@@ -29,7 +29,7 @@ public class FlipFinder {
         availableItems = allItems;
     }
 
-    public FlipItem GetBestMarginItem(int availableGp) {
+    public FlipItem GetBestItem(int availableGp) {
         HashMap<Integer, PriceData> apiData = RuneLiteApi.GetItemData();
         ArrayList<FlipItem> bestItems = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class FlipFinder {
             }
         }
 
-        log("Considered items: " + bestItems.stream().count());
+        log("Considered items: " + (long) bestItems.size());
 
         // Return the best item
         return bestItem;

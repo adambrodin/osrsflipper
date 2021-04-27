@@ -56,25 +56,23 @@ public class SaveManager {
 
             try {
                 InputStream inputStream = new FileInputStream(file);
-                if (inputStream != null) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-                    String receivedString;
-                    while ((receivedString = bufferedReader.readLine()) != null) {
-                        builder.append(receivedString);
-                    }
-
-                    inputStream.close();
-                    switch (savedType) {
-                        case TradingInfo:
-                            tradingInfo = gson.fromJson(builder.toString(), TradingInfo.class);
-                            break;
-                        default:
-                            log("Unknown savedType!");
-                    }
+                String receivedString;
+                while ((receivedString = bufferedReader.readLine()) != null) {
+                    builder.append(receivedString);
                 }
-            } catch (IOException e) {
+
+                inputStream.close();
+                switch (savedType) {
+                    case TradingInfo:
+                        tradingInfo = gson.fromJson(builder.toString(), TradingInfo.class);
+                        break;
+                    default:
+                        log("Unknown savedType!");
+                }
+            } catch (IOException ignored) {
             }
         }
     }
@@ -120,7 +118,7 @@ public class SaveManager {
         try {
             Objects.requireNonNull(tradingInfo.usedBuyingLimits.stream().filter(
                     entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().orElse(null)).amountUsed += modifyAmount;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
