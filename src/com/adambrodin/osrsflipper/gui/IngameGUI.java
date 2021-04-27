@@ -102,11 +102,17 @@ public class IngameGUI {
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
-    public static String GetFormattedGold(int gold, boolean roundToThousands) {
-        if (roundToThousands) {
-            gold /= 1000;
+    public static String GetFormattedGold(int gold, boolean roundGold) {
+        String suffix = "K";
+        if (roundGold) {
+            if (gold >= 1000000) {
+                gold /= 1000000;
+                suffix = "M";
+            } else {
+                gold /= 1000;
+            }
         }
 
-        return NumberFormat.getInstance(Locale.US).format(gold) + (roundToThousands && gold != 0 ? "K" : " gp");
+        return NumberFormat.getInstance(Locale.US).format(gold) + (roundGold && gold != 0 ? suffix : " gp");
     }
 }

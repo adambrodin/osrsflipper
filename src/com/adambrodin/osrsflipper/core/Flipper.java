@@ -66,6 +66,7 @@ public class Flipper {
                         // If the flip is a buy
                         if (flip.buy) {
                             if (Inventory.contains(flip.item.item.itemName)) {
+                                log("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is finished, selling!");
                                 int amount = Inventory.get(flip.item.item.itemName).getAmount();
                                 int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
 
@@ -108,7 +109,7 @@ public class Flipper {
                             if (!flip.buy) {
                                 // Display the profit
                                 IngameGUI.sessionProfit += profit;
-                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                             }
                             activeFlips.remove(flip);
                         }

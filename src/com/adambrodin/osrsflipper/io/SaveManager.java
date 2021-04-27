@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.dreambot.api.methods.MethodProvider.log;
+import static org.dreambot.api.methods.MethodProvider.logInfo;
 
 public class SaveManager {
     private static final Gson gson = new Gson();
@@ -96,7 +97,7 @@ public class SaveManager {
         for (BuyingLimit limit : tradingInfo.usedBuyingLimits) {
             if (Duration.between(LocalDateTime.now(), limit.expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
                 tradingInfo.usedBuyingLimits.remove(limit);
-                log("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
+                logInfo("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
                 continue;
             }
 
@@ -125,7 +126,7 @@ public class SaveManager {
     public static void RemoveLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.removeIf(entry -> entry.amountUsed == amount && entry.item.item.itemName.equalsIgnoreCase(item.item.itemName));
         Save();
-        log("Removed limit - " + amount + "x " + item.item.itemName);
+        logInfo("Removed limit - " + amount + "x " + item.item.itemName);
     }
 
     private enum SavedType {

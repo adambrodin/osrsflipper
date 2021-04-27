@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.dreambot.api.methods.MethodProvider.log;
+import static org.dreambot.api.methods.MethodProvider.logInfo;
 
 public class FlipFinder {
     private final List<ApiItem> availableItems;
@@ -94,7 +95,7 @@ public class FlipFinder {
             }
         }
 
-        log("Considered items: " + (long) bestItems.size());
+        logInfo("Considered items: " + (long) bestItems.size());
 
         // Return the best item
         return bestItem;
