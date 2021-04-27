@@ -37,7 +37,8 @@ public class GEController {
             sleepUntil(() -> GEController.ItemInSlot(item), 5000);
             if (GEController.ItemInSlot(item)) {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
-                log("Added new active flip (BUY: " + buy + "): " + flip.amount + "x " + flip.item.item.itemName + " - potential profit: " + flip.item.potentialProfitGp + "gp - " + flip.item.marginPerc + "% margin (" + flip.item.marginGp + "gp)");
+                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "] - (" + flip.amount + "x " + flip.item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(flip.item.potentialProfitGp, true)
+                        + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) flip.item.averagedVolume, true) + "/HR - Margin (" + flip.item.marginGp + "gp - " + String.format("%.2f", flip.item.marginPerc) + "%)");
                 Flipper.activeFlips.add(flip);
             }
             sleep(1000);

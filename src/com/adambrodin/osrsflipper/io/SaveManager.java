@@ -114,7 +114,6 @@ public class SaveManager {
     public static void AddUsedLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.add(new BuyingLimit(item, amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
         Save();
-        log("Added limit - " + amount + "x " + item.item.itemName);
     }
 
     public static void ModifyLimit(FlipItem item, int amount, int modifyAmount) {
