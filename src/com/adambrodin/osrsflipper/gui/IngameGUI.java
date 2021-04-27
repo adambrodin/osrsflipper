@@ -43,7 +43,7 @@ public class IngameGUI {
             g2d.setFont(BotConfig.OVERLAY_FONT);
             g2d.setColor(Color.WHITE);
 
-            g2d.drawString("CURRENT ACTION: " + currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
+            g2d.drawString(currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
             g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit, true), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
 

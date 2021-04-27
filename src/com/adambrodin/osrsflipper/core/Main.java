@@ -33,6 +33,7 @@ public class Main extends AbstractScript {
     public int onLoop() {
         if (Client.getGameState() == GameState.LOGGED_IN) {
             if (!hasLoggedIn) {
+                getRandomManager().disableSolver(RandomEvent.LOGIN);
                 hasLoggedIn = true;
                 IngameGUI.hasLoggedIn = true;
                 IngameGUI.loggedInMillis = System.currentTimeMillis();
