@@ -117,8 +117,11 @@ public class SaveManager {
     }
 
     public static void ModifyLimit(FlipItem item, int amount, int modifyAmount) {
-        tradingInfo.usedBuyingLimits.stream().filter(
-                entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().get().amountUsed += modifyAmount;
+        try {
+            tradingInfo.usedBuyingLimits.stream().filter(
+                    entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().orElse(null).amountUsed += modifyAmount;
+        } catch (Exception e) {
+        }
     }
 
     public static void RemoveLimit(FlipItem item, int amount) {

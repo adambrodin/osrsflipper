@@ -50,10 +50,15 @@ public class Flipper {
         if (!activeFlips.isEmpty()) {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
+                if (!Inventory.contains(flip.item.item.itemName) && !GEController.ItemInSlot(flip.item)) {
+                    log("Flip no longer active, removing! - " + flip.item.maxAmountAvailable + "x " + flip.item.item.itemName);
+                    activeFlips.remove(flip);
+                }
+
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);
 
-                if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95) {
+                if ((activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95)) {
                     IngameGUI.currentAction = "Cancelling - " + flip.item.item.itemName;
                     int profit = 0;
 
@@ -63,57 +68,60 @@ public class Flipper {
 
                     boolean tradeCreated = false;
 
-                    // If the flip is a buy
-                    if (flip.buy) {
-                        if (Inventory.contains(flip.item.item.itemName)) {
-                            int amount = Inventory.get(flip.item.item.itemName).getAmount();
-                            int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
+                    if (GrandExchange.getFirstOpenSlot() != -1) {
+                        // If the flip is a buy
+                        if (flip.buy) {
+                            if (Inventory.contains(flip.item.item.itemName)) {
+                                int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                                int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
 
-                            // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
-                            SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
-                            log("Selling " + amount + "x " + flip.item.item.itemName);
-                            tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
-                            if (tradeCreated) {
-                                sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                                ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
-                                sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
-                                activeFlips.add(sellFlip);
-                                log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
+                                // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
+                                SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
+                                log("Selling " + amount + "x " + flip.item.item.itemName);
+                                tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
+                                if (tradeCreated) {
+                                    sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                                    ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
+                                    sellFlip.item.maxAmountAvailable = amount;
+                                    sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
+                                    activeFlips.add(sellFlip);
+                                    log("Added new active flip (SELL): " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + " each");
+                                }
+                            } else if (!GEController.ItemInSlot(flip.item)) { // No items were bought, simply remove flip
+                                // Remove used limit (no limit was used)
+                                SaveManager.RemoveLimit(flip.item, flip.amount);
+                                tradeCreated = true;
                             }
-                        } else if (!GEController.ItemInSlot(flip.item)) { // No items were bought, simply remove flip
-                            // Remove used limit (no limit was used)
-                            SaveManager.RemoveLimit(flip.item, flip.amount);
+                            // If the flip is a sell and the inventory still contains the item
+                        } else if (Inventory.contains(flip.item.item.itemName)) {
+                            // Force sell the rest of the items that weren't sold
+                            int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                            profit += (flip.amount - amount) * flip.item.marginGp;
+                            log("Force-selling " + amount + "x " + flip.item.item.itemName);
+                            tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
+                            boolean finalTradeCreated = tradeCreated;
+                            sleepUntil(() -> finalTradeCreated && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                            sleep(2000);
+                            GrandExchange.collect();
+                            sleep(1000);
+                            sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                        } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
+                            profit += flip.amount * flip.item.marginGp;
+                            log("Flip (" + flip.item.item.itemName + ") is fully sold, removing!");
                             tradeCreated = true;
                         }
-                        // If the flip is a sell and the inventory still contains the item
-                    } else if (Inventory.contains(flip.item.item.itemName)) {
-                        // Force sell the rest of the items that weren't sold
-                        int amount = Inventory.get(flip.item.item.itemName).getAmount();
-                        profit += (flip.amount - amount) * flip.item.marginGp;
-                        log("Force-selling " + amount + "x " + flip.item.item.itemName);
-                        tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
-                        boolean finalTradeCreated = tradeCreated;
-                        sleepUntil(() -> finalTradeCreated && GEController.GetCompletedPercentage(flip.item) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                        sleep(2000);
-                        GrandExchange.collect();
-                        sleep(1000);
-                        sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
-                        profit += flip.amount * flip.item.marginGp;
-                        log("Flip (" + flip.item.item.itemName + ") is fully sold, removing!");
-                        tradeCreated = true;
-                    }
 
-                    if (tradeCreated) {
-                        if (!flip.buy) {
-                            // Display the profit
-                            IngameGUI.sessionProfit += profit;
-                            log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                        if (tradeCreated) {
+                            if (!flip.buy) {
+                                // Display the profit
+                                IngameGUI.sessionProfit += profit;
+                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + "(" + flip.amount + "x " + flip.item.item.itemName + " ended with a profit of: " + profit + " gp");
+                            }
+                            activeFlips.remove(flip);
                         }
-                        activeFlips.remove(flip);
-                    }
 
-                    SaveManager.SaveActiveFlips(activeFlips);
+                        SaveManager.SaveActiveFlips(activeFlips);
+                    }
                 }
             }
             sleep(2000);

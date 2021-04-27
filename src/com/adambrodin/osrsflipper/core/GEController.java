@@ -153,7 +153,7 @@ public class GEController {
     public static int GetSlotFromItem(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && item.maxAmountAvailable == geItem.getAmount()) {
                     return geItem.getSlot();
                 }
             }
