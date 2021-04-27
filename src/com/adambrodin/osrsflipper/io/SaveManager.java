@@ -18,6 +18,7 @@ import static org.dreambot.api.methods.MethodProvider.log;
 import static org.dreambot.api.methods.MethodProvider.logInfo;
 
 public class SaveManager {
+    public static int sessionStartFlipsInitiated;
     private static final Gson gson = new Gson();
     public static TradingInfo tradingInfo;
 
