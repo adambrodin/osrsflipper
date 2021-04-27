@@ -19,14 +19,14 @@ public class Main extends AbstractScript {
 
     @Override
     public void onStart() {
-        // Load all the saved data/flips/settings etc
-        SaveManager.Load();
-        Flipper.activeFlips = SaveManager.GetSavedFlips();
-
         // Disable auto-login
         if (BotConfig.DISABLE_AUTOLOGIN) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
         }
+
+        // Load all the saved data/flips/settings etc
+        SaveManager.Load();
+        Flipper.activeFlips = SaveManager.GetSavedFlips();
     }
 
     @Override
@@ -44,17 +44,14 @@ public class Main extends AbstractScript {
             // Checks if flips are finished and creates new ones if needed
             Flipper.ExecuteFlips();
         } else if (hasLoggedIn) {
-            IngameGUI.loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             getRandomManager().disableSolver(RandomEvent.LOGIN);
+            IngameGUI.loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logged out! Waiting " + BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + " minutes before logging back in.");
             sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, (BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logging back in!");
             getRandomManager().enableSolver(RandomEvent.LOGIN);
             sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, 60000);
-
-            if (BotConfig.DISABLE_AUTOLOGIN) {
-                getRandomManager().disableSolver(RandomEvent.LOGIN);
-            }
+            getRandomManager().disableSolver(RandomEvent.LOGIN);
         }
         return 0;
     }
