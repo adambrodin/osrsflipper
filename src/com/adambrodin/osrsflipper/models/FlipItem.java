@@ -1,5 +1,6 @@
 package com.adambrodin.osrsflipper.models;
 
+import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 
 public class FlipItem {
@@ -43,6 +44,11 @@ public class FlipItem {
         // If the item has great volume margins (more likely to flip faster)
         if (averagedVolume >= remainingBuyingLimit * 10) {
             score += potentialProfitGp * 25;
+        }
+
+        // If there is only one slot left and the last item doesn't use the whole cash stack, lower its score
+        if (GEController.AmountOfSlotsAvailable() == 1 && (maxAmountAvailable * avgLowPrice) <= (float) (availableGp * 0.75)) {
+            score -= potentialProfitGp * 30;
         }
 
         return (int) score;
