@@ -50,10 +50,6 @@ public class Flipper {
         if (!activeFlips.isEmpty()) {
             for (int i = 0; i < activeFlips.size(); i++) {
                 ActiveFlip flip = activeFlips.get(i);
-                if (!Inventory.contains(flip.item.item.itemName) && !GEController.ItemInSlot(flip.item)) {
-                    log("Flip no longer active, removing! - " + flip.item.maxAmountAvailable + "x " + flip.item.item.itemName);
-                    activeFlips.remove(flip);
-                }
 
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);

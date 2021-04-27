@@ -1,7 +1,9 @@
 package com.adambrodin.osrsflipper.misc;
 
 import com.adambrodin.osrsflipper.core.Flipper;
+import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.gui.IngameGUI;
+import com.adambrodin.osrsflipper.io.SaveManager;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.methods.Calculations;
@@ -80,6 +82,14 @@ public class AccountSetup {
                     clerk.interact("Exchange");
                     sleepUntil(() -> GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                     sleep(500);
+                }
+
+                for (int i = 0; i < Flipper.activeFlips.size(); i++) {
+                    if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
+                        log("Flip no longer active, removing! - " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]" + Flipper.activeFlips.get(i).item.maxAmountAvailable + "x " + Flipper.activeFlips.get(i).item.item.itemName);
+                        Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
+                        SaveManager.SaveActiveFlips(Flipper.activeFlips);
+                    }
                 }
             }
         } catch (Exception e) {
