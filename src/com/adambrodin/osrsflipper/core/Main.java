@@ -63,4 +63,13 @@ public class Main extends AbstractScript {
         super.onPaint(graphics);
         IngameGUI.Draw(graphics);
     }
+
+    @Override
+    public void onExit() {
+        SaveManager.SetStats(IngameGUI.GetTimeSeconds(IngameGUI.loggedInMillis), IngameGUI.sessionProfit);
+        SaveManager.SaveActiveFlips(Flipper.activeFlips);
+        log("Session ended! (" + IngameGUI.GetFormattedTime(IngameGUI.GetTimeSeconds(IngameGUI.loggedInMillis), false) + ") - PROFIT: " + IngameGUI.GetFormattedGold(IngameGUI.sessionProfit, true))
+        ;
+        super.onExit();
+    }
 }

@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.dreambot.api.methods.MethodProvider.log;
 
@@ -30,11 +31,16 @@ public class SaveManager {
 
     public static void Load() {
         if (tradingInfo == null) {
-            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>());
+            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>(), 0, 0);
         }
 
         // Sets tradingInfo to data from the file
         SynchronizeFile(BotConfig.SAVED_DATA_FILE_NAME, false, "", SavedType.TradingInfo);
+    }
+
+    public static void SetStats(int totalUptimeSeconds, int totalProfitGp) {
+        tradingInfo.totalUptimeSeconds = totalUptimeSeconds;
+        tradingInfo.totalProfitGp = totalProfitGp;
     }
 
     private static void SynchronizeFile(String path, boolean write, String json, SavedType savedType) {
@@ -118,8 +124,8 @@ public class SaveManager {
 
     public static void ModifyLimit(FlipItem item, int amount, int modifyAmount) {
         try {
-            tradingInfo.usedBuyingLimits.stream().filter(
-                    entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().orElse(null).amountUsed += modifyAmount;
+            Objects.requireNonNull(tradingInfo.usedBuyingLimits.stream().filter(
+                    entry -> entry.item.item.itemName.equalsIgnoreCase(item.item.itemName) && entry.amountUsed == amount).findFirst().orElse(null)).amountUsed += modifyAmount;
         } catch (Exception e) {
         }
     }

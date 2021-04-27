@@ -56,7 +56,7 @@ public class IngameGUI {
                 g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
             }
 
-            if (hasLoggedIn && Client.getGameState() == GameState.LOGIN_SCREEN) {
+            if (Client.getGameState() == GameState.LOGIN_SCREEN) {
                 g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
             }
 
@@ -86,11 +86,11 @@ public class IngameGUI {
         }
     }
 
-    private static int GetTimeSeconds(long startMillis) {
+    public static int GetTimeSeconds(long startMillis) {
         return (int) (System.currentTimeMillis() - startMillis) / 1000;
     }
 
-    private static String GetFormattedTime(int uptimeSeconds, boolean shortened) {
+    public static String GetFormattedTime(int uptimeSeconds, boolean shortened) {
         int seconds = uptimeSeconds % 60;
         int minutes = (uptimeSeconds % 3600) / 60;
         int hours = uptimeSeconds / 3600;
@@ -102,7 +102,7 @@ public class IngameGUI {
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
-    private static String GetFormattedGold(int gold, boolean roundToThousands) {
+    public static String GetFormattedGold(int gold, boolean roundToThousands) {
         if (roundToThousands) {
             gold /= 1000;
         }
