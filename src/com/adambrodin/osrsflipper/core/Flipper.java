@@ -57,7 +57,7 @@ public class Flipper {
                 float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
                 float completedPercentage = GEController.GetCompletedPercentage(flip.item);
 
-                if ((activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95)) {
+                if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95 || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName))) {
                     IngameGUI.currentAction = "Cancelling - " + flip.item.item.itemName;
                     int profit = 0;
 
