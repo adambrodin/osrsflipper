@@ -95,7 +95,7 @@ public class FlipFinder {
             }
         }
 
-        logInfo("Considered items: " + (long) bestItems.size());
+        log("Considered items: " + (long) bestItems.size());
 
         // Return the best item
         return bestItem;
