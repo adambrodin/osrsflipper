@@ -24,6 +24,11 @@ public class Flipper {
             IngameGUI.currentAction = "Waiting for flips to update";
             CheckFlips();
 
+            if (GrandExchange.isReadyToCollect()) {
+                GrandExchange.collect();
+                sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+            }
+
             int cashInInventory = 0;
             if (Inventory.contains("Coins")) {
                 cashInInventory = Inventory.count("Coins");
@@ -109,7 +114,7 @@ public class Flipper {
                             if (!flip.buy) {
                                 // Display the profit
                                 IngameGUI.sessionProfit += profit;
-                                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                                log("Flip [SELL]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                             }
                             activeFlips.remove(flip);
                         }
@@ -118,7 +123,7 @@ public class Flipper {
                     }
                 }
             }
-            sleep(2000);
+            sleep(1000);
         }
     }
 }

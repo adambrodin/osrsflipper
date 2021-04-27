@@ -113,8 +113,8 @@ public class GEController {
             log(e.getMessage());
         }
 
-        if (!IngameGUI.currentAction.equals("Couldn't get completed percentage for: " + item.item.itemName + "!")) {
-            IngameGUI.currentAction = "Couldn't get completed percentage for: " + item.item.itemName + "!";
+        if (!IngameGUI.currentAction.equals("Can't get completed percentage for: " + item.item.itemName + "!")) {
+            IngameGUI.currentAction = "Can't get completed percentage for: " + item.item.itemName + "!";
         }
 
         // Item not found
@@ -139,7 +139,7 @@ public class GEController {
     public static int GetSlotFromItem(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && item.maxAmountAvailable == geItem.getAmount()) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return geItem.getSlot();
                 }
             }
