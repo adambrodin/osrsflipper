@@ -17,8 +17,8 @@ import java.util.Objects;
 import static org.dreambot.api.methods.MethodProvider.log;
 
 public class SaveManager {
-    private static Gson gson = new Gson();
-    private static TradingInfo tradingInfo;
+    private static final Gson gson = new Gson();
+    public static TradingInfo tradingInfo;
 
     public static void Save() {
         if (tradingInfo == null) {
@@ -31,16 +31,11 @@ public class SaveManager {
 
     public static void Load() {
         if (tradingInfo == null) {
-            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>(), 0, 0);
+            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>(), 0, 0, 0);
         }
 
         // Sets tradingInfo to data from the file
         SynchronizeFile(BotConfig.SAVED_DATA_FILE_NAME, false, "", SavedType.TradingInfo);
-    }
-
-    public static void SetStats(int totalUptimeSeconds, int totalProfitGp) {
-        tradingInfo.totalUptimeSeconds = totalUptimeSeconds;
-        tradingInfo.totalProfitGp = totalProfitGp;
     }
 
     private static void SynchronizeFile(String path, boolean write, String json, SavedType savedType) {

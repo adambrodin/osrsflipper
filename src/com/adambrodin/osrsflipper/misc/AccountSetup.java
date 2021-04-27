@@ -80,7 +80,7 @@ public class AccountSetup {
                 NPC clerk = NPCs.closest("Grand Exchange Clerk");
                 if (clerk != null) {
                     clerk.interact("Exchange");
-                    sleepUntil(() -> GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                    sleepUntil(GrandExchange::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
                     sleep(500);
                 }
 
@@ -92,7 +92,7 @@ public class AccountSetup {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
