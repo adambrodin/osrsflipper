@@ -37,7 +37,7 @@ public class GEController {
             sleepUntil(() -> GEController.ItemInSlot(item), 5000);
             if (GEController.ItemInSlot(item)) {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
-                log("Flip [" + (flip.buy ? "BUY" : "SELL") + "] - (" + flip.amount + "x " + flip.item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(flip.item.potentialProfitGp, true)
+                logInfo("Flip [" + (flip.buy ? "BUY" : "SELL") + "] - (" + flip.amount + "x " + flip.item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(flip.item.potentialProfitGp, true)
                         + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) flip.item.averagedVolume, true) + "/HR - Margin (" + flip.item.marginGp + "gp - " + String.format("%.2f", flip.item.marginPerc) + "%)");
                 Flipper.activeFlips.add(flip);
             }
@@ -59,13 +59,13 @@ public class GEController {
     }
 
     // Returns the amount of items from slot
-    public static void CollectItem(FlipItem item, boolean isBuy) {
+    public static void CollectItem(FlipItem item, boolean isBuy, int amount) {
         try {
             if (GrandExchange.isOpen()) {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                     if (geItem != null && geItem.getItem().getName().equals(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
-                        if (GetCompletedPercentage(item) < 100) {
+                        if (GetCompletedPercentage(item, amount) < 100) {
                             GrandExchange.cancelOffer(geItem.getSlot());
                             sleep(1000);
                             GrandExchange.goBack();
@@ -101,9 +101,9 @@ public class GEController {
         return amountOfSlots;
     }
 
-    public static float GetCompletedPercentage(FlipItem item) {
+    public static float GetCompletedPercentage(FlipItem item, int amount) {
         try {
-            int slot = GetSlotFromItem(item);
+            int slot = GetSlotFromItem(item, amount);
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                 if (geItem != null && geItem.getSlot() == slot) {
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
@@ -136,10 +136,10 @@ public class GEController {
         return availableSlots;
     }
 
-    public static int GetSlotFromItem(FlipItem item) {
+    public static int GetSlotFromItem(FlipItem item, int amount) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.getAmount() == amount) {
                     return geItem.getSlot();
                 }
             }
