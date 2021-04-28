@@ -89,6 +89,7 @@ public class AccountSetup {
                         log("Flip no longer active, removing! - " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
                         Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
                         SaveManager.SaveActiveFlips(Flipper.activeFlips);
+                        continue;
                     }
 
                     log("Loaded saved flip: " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);

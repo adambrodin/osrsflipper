@@ -42,7 +42,7 @@ public class FlipItem {
         }
 
         // If the item has great volume margins (more likely to flip faster)
-        if (averagedVolume >= remainingBuyingLimit * 10) {
+        if (averagedVolume >= remainingBuyingLimit * 3) {
             score += potentialProfitGp * 25;
         }
 

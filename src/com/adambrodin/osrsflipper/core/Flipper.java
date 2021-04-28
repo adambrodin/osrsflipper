@@ -39,7 +39,7 @@ public class Flipper {
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
-                    availableGp = (int) (cashInInventory * 0.65);
+                    availableGp = (int) (cashInInventory * 0.7);
                 }
 
                 FlipItem bestItem = flipFinder.GetBestItem(availableGp);
@@ -81,7 +81,6 @@ public class Flipper {
                                 if (tradeCreated) {
                                     sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
                                     ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
-                                    sellFlip.amount = amount;
                                     sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
                                     activeFlips.add(sellFlip);
                                     logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
