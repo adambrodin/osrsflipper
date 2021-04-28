@@ -15,7 +15,7 @@ public class ActiveFlip {
         this.amount = amount;
         this.item = item;
         this.startedTimeEpochsMs = System.currentTimeMillis();
-        this.slot = GEController.GetSlotFromItem(item);
+        this.slot = GEController.GetSlotFromItem(item, amount);
 
         if (buy) {
             // Adds & saves the used limit to prevent double purchasing when it isn't possible
