@@ -21,7 +21,7 @@ public class BotConfig {
     public static final float MIN_PROFIT_FOR_FLIP = 5000;
     public static final int MIN_GOLD_FOR_FLIP = 50000; // Minimum amount of gp in inventory to start new flips
     public static final int MIN_CASHSTACK_FOR_PERCENTAGE_FLIP = 800000; // Min amount of gp to only use MAX_CASHSTACK_PERCENTAGE_PER_FLIP instead of 100%
-    public static final float MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP = 0.5f; // The max amount of % money to use for the "risky" flip (without requirements)
+    public static final float MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP = 0.3f; // The max amount of % money to use for the "risky" flip (without requirements)
     public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 40;
     public static final float MAX_ITEM_MARGIN_PERCENTAGE = 20; // Max percentage margin for an item to even be considered at all
     public static final float MAX_VALID_MARGIN_PERCENTAGE = 10; // Maximum percentage for an item to considered normally (this is to minimize items such as runes with 25% margin)
