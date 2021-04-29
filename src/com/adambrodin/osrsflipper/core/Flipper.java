@@ -42,7 +42,16 @@ public class Flipper {
                     availableGp = (int) (cashInInventory * 0.7);
                 }
 
-                FlipItem bestItem = flipFinder.GetBestItem(availableGp);
+                FlipItem bestItem = null;
+                if (activeFlips.stream().filter(flip -> flip.item.skippedRequirements).findFirst().isPresent()) {
+                    bestItem = flipFinder.GetBestItem(availableGp, false);
+                } else {
+                    availableGp = (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP);
+                    logInfo("The next flip will be fetched without using volume/margin rules!");
+                    bestItem = flipFinder.GetBestItem(availableGp, true);
+                    bestItem.skippedRequirements = true;
+                }
+
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                 SaveManager.SaveActiveFlips(activeFlips);
             }

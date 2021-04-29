@@ -4,6 +4,7 @@ import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 
 public class FlipItem {
+    public boolean skippedRequirements;
     public ApiItem item;
     public int avgLowPrice;
     public float marginPerc;

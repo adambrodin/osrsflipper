@@ -29,7 +29,7 @@ public class FlipFinder {
         availableItems = allItems;
     }
 
-    public FlipItem GetBestItem(int availableGp) {
+    public FlipItem GetBestItem(int availableGp, boolean skipRestrictions) {
         HashMap<Integer, PriceData> apiData = RuneLiteApi.GetItemData();
         ArrayList<FlipItem> bestItems = new ArrayList<>();
 
@@ -59,8 +59,8 @@ public class FlipFinder {
                 double averagedVolume = ((double) entryItem.highPriceVolume + (double) entryItem.lowPriceVolume) / 2;
 
                 boolean itemAlreadyFlipping = false;
-                if (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP
-                        && !BotConfig.BLOCKED_ITEMS.contains(apiItem.itemName)) {
+                if (skipRestrictions || (marginPerc >= BotConfig.MIN_ITEM_MARGIN_PERCENTAGE && marginPerc <= BotConfig.MAX_ITEM_MARGIN_PERCENTAGE && averagedVolume >= BotConfig.MIN_ITEM_VOLUME && marginGp >= BotConfig.MIN_ITEM_MARGIN_GP
+                        && !BotConfig.BLOCKED_ITEMS.contains(apiItem.itemName))) {
                     for (ActiveFlip flip : Flipper.activeFlips) {
                         // Prevent the same item being flipped multiple times
                         if (flip.item.item.itemName.toLowerCase().contains(apiItem.itemName.toLowerCase())) {
