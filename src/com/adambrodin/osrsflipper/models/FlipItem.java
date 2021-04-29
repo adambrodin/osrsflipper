@@ -24,32 +24,34 @@ public class FlipItem {
 
     public int GetPerformanceScore(int availableGp, int remainingBuyingLimit) {
         float score = 0;
+
         // Determines how many items that can be bought based on player gold & current market
         int purchasePrice = BotConfig.CUT_PRICES ? avgLowPrice + Math.round((float) marginGp / 5) : avgLowPrice;
         maxAmountAvailable = (int) Math.min(Math.min(remainingBuyingLimit, averagedVolume), (float) (availableGp / purchasePrice));
         potentialProfitGp = maxAmountAvailable * marginGp;
+        if (potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
+            // Increases score, the more the profit is
+            score += potentialProfitGp * 10;
 
-        // Increases score, the more the profit is
-        score += potentialProfitGp * 10;
+            // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes which are typically slower)
+            if (marginPerc > BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
+                score -= potentialProfitGp * 3;
+            }
 
-        // Increases score if its below a certain percentage margin threshold (to minimize 25% margins such as runes which are typically slower)
-        if (marginPerc > BotConfig.MAX_VALID_MARGIN_PERCENTAGE) {
-            score -= potentialProfitGp * 3;
-        }
+            // Increases score if the item has had more trading volume (more likely to successfully flip)
+            if (averagedVolume >= BotConfig.ITEM_VOLUME_GREAT) {
+                score += potentialProfitGp * 3;
+            }
 
-        // Increases score if the item has had more trading volume (more likely to successfully flip)
-        if (averagedVolume >= BotConfig.ITEM_VOLUME_GREAT) {
-            score += potentialProfitGp * 3;
-        }
+            // If the item has great volume margins (more likely to flip faster)
+            if (averagedVolume >= remainingBuyingLimit * 3) {
+                score += potentialProfitGp * 25;
+            }
 
-        // If the item has great volume margins (more likely to flip faster)
-        if (averagedVolume >= remainingBuyingLimit * 3) {
-            score += potentialProfitGp * 25;
-        }
-
-        // If there is only one slot left and the last item doesn't use the whole cash stack, lower its score
-        if (GEController.AmountOfSlotsAvailable() == 1 && (maxAmountAvailable * avgLowPrice) <= (float) (availableGp * 0.75)) {
-            score -= potentialProfitGp * 30;
+            // If there is only one slot left and the last item doesn't use the whole cash stack, lower its score
+            if (GEController.AmountOfSlotsAvailable() == 1 && (maxAmountAvailable * avgLowPrice) <= (float) (availableGp * 0.75)) {
+                score -= potentialProfitGp * 30;
+            }
         }
 
         return (int) score;
