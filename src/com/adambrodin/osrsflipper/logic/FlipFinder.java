@@ -86,7 +86,7 @@ public class FlipFinder {
             }
 
             try {
-                if (item.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(item)) > bestItemPerfScore) {
+                if (item.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(item)) > bestItemPerfScore && item.potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
                     bestItem = item;
                     bestItemPerfScore = bestItem.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(bestItem));
                 }
