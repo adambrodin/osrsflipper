@@ -71,7 +71,7 @@ public class Flipper {
                         // If the flip is a buy
                         if (flip.buy) {
                             if (Inventory.contains(flip.item.item.itemName)) {
-                                logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") has finished, selling!");
+                                logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
                                 int amount = Inventory.get(flip.item.item.itemName).getAmount();
                                 int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
 

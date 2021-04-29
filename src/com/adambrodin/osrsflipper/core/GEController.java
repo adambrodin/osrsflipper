@@ -15,8 +15,9 @@ public class GEController {
     public static void TransactItem(FlipItem item, boolean buy, int amount) {
         boolean tradeCreated;
 
+        int price;
         if (buy) {
-            int price = item.avgLowPrice;
+            price = item.avgLowPrice;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Increase the price slightly to overcut
                 price += Math.round((float) item.marginGp / 5);
@@ -24,7 +25,7 @@ public class GEController {
 
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
         } else {
-            int price = item.avgLowPrice + item.marginGp;
+            price = item.avgLowPrice + item.marginGp;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Decrease the price slightly to undercut
                 price -= Math.round((float) item.marginGp / 5);
@@ -38,7 +39,8 @@ public class GEController {
             if (GEController.ItemInSlot(item)) {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
                 logInfo("Flip [" + (flip.buy ? "BUY" : "SELL") + "] - (" + flip.amount + "x " + flip.item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(flip.item.potentialProfitGp, true)
-                        + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) flip.item.averagedVolume, true) + "/HR - Margin (" + flip.item.marginGp + "gp - " + String.format("%.2f", flip.item.marginPerc) + "%)");
+                        + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) flip.item.averagedVolume, true) + "/HR - Margin (" + flip.item.marginGp + "gp - " + String.format("%.2f", flip.item.marginPerc) + "%) - Average Low Price: " +
+                        flip.item.avgLowPrice + "gp - TOTAL FLIP VALUE: " + IngameGUI.GetFormattedGold(amount * price, true));
                 Flipper.activeFlips.add(flip);
             }
             sleep(1000);

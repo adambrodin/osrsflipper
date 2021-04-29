@@ -57,7 +57,7 @@ public class IngameGUI {
             }
 
             if (Client.getGameState() == GameState.LOGIN_SCREEN) {
-                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 15, 25);
+                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 5, 25);
             }
 
             DrawGEOverlay(g2d);
@@ -103,16 +103,17 @@ public class IngameGUI {
     }
 
     public static String GetFormattedGold(int gold, boolean roundGold) {
+        int startGold = gold;
         String suffix = "K";
         if (roundGold) {
             if (gold >= 1000000) {
                 gold /= 1000000;
                 suffix = "M";
-            } else {
+            } else if (gold >= 1000) {
                 gold /= 1000;
             }
         }
 
-        return NumberFormat.getInstance(Locale.US).format(gold) + (roundGold && gold != 0 ? suffix : " gp");
+        return NumberFormat.getInstance(Locale.US).format(gold) + (roundGold && startGold >= 1000 ? suffix : " gp");
     }
 }
