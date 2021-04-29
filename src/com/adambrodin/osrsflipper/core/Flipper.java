@@ -125,7 +125,7 @@ public class Flipper {
                             if (!flip.buy) {
                                 // Display the profit
                                 IngameGUI.sessionProfit += profit;
-                                logInfo("Flip [SELL]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ended with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                                logInfo("Flip [SELL]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                             }
                             activeFlips.remove(flip);
                         }

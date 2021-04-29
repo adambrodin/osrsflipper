@@ -20,7 +20,7 @@ public class GEController {
             price = item.avgLowPrice;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Increase the price slightly to overcut
-                price += Math.round((float) item.marginGp / 5);
+                price += Math.round((float) item.avgLowPrice / 100);
             }
 
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
@@ -28,7 +28,7 @@ public class GEController {
             price = item.avgLowPrice + item.marginGp;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Decrease the price slightly to undercut
-                price -= Math.round((float) item.marginGp / 5);
+                price -= Math.round((float) item.avgLowPrice / 100);
             }
 
             tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);

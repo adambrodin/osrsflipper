@@ -81,7 +81,7 @@ public class AccountSetup {
                 if (clerk != null) {
                     clerk.interact("Exchange");
                     sleepUntil(GrandExchange::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    sleep(500);
+                    sleep(2000);
                 }
 
                 for (int i = 0; i < Flipper.activeFlips.size(); i++) {
