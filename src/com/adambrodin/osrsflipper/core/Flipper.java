@@ -91,6 +91,9 @@ public class Flipper {
                                     sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
                                     ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
                                     sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
+                                    if (flip.item.skippedRequirements) {
+                                        sellFlip.item.skippedRequirements = true;
+                                    }
                                     activeFlips.add(sellFlip);
                                     logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
                                 }
