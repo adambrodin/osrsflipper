@@ -3,6 +3,8 @@ package com.adambrodin.osrsflipper.misc;
 import org.dreambot.api.methods.map.Area;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class BotConfig {
     // API
@@ -25,6 +27,8 @@ public class BotConfig {
     public static final float MIN_ITEM_MARGIN_GP = 1;
     public static final float MIN_ITEM_VOLUME = 50000; // Min volume for an item in the endpoint timespan
     public static final int MIN_ITEM_PRICE_FOR_CUT = 100; // Min item price for it to be cut (to prevent cutting very cheap items)
+
+    public static final List<String> BLOCKED_ITEMS = Arrays.asList("Swamp tar", "Thread", "Bucket of water", "Bucket");
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);
     // TIMEOUTS
