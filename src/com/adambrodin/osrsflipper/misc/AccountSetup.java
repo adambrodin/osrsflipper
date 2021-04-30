@@ -29,6 +29,17 @@ public class AccountSetup {
             TravelToGE();
         }
 
+        for (int i = 0; i < Flipper.activeFlips.size(); i++) {
+            if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
+                log("Flip no longer active, removing! - " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
+                Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
+                SaveManager.SaveActiveFlips(Flipper.activeFlips);
+                continue;
+            }
+
+            log("Loaded saved flip: " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
+        }
+
         if (GrandExchange.isOpen() && !bankIsChecked) {
             GrandExchange.close();
             sleepUntil(() -> !GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
@@ -82,17 +93,6 @@ public class AccountSetup {
                     clerk.interact("Exchange");
                     sleepUntil(GrandExchange::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
                     sleep(2000);
-                }
-
-                for (int i = 0; i < Flipper.activeFlips.size(); i++) {
-                    if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
-                        log("Flip no longer active, removing! - " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
-                        Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
-                        SaveManager.SaveActiveFlips(Flipper.activeFlips);
-                        continue;
-                    }
-
-                    log("Loaded saved flip: " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
                 }
             }
         } catch (Exception ignored) {

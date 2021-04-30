@@ -42,8 +42,8 @@ public class Flipper {
                     availableGp = (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_PER_FLIP);
                 }
 
-                FlipItem bestItem = null;
-                if (activeFlips.stream().filter(flip -> flip.item.skippedRequirements).findFirst().isPresent()) {
+                FlipItem bestItem;
+                if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements)) {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
                     availableGp = (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP);
@@ -52,8 +52,10 @@ public class Flipper {
                     bestItem.skippedRequirements = true;
                 }
 
-                GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
-                SaveManager.SaveActiveFlips(activeFlips);
+                if(bestItem.potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
+                    GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
+                    SaveManager.SaveActiveFlips(activeFlips);
+                }
             }
         }
     }
