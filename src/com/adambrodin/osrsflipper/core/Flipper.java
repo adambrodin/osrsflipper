@@ -52,10 +52,8 @@ public class Flipper {
                     bestItem.skippedRequirements = true;
                 }
 
-                if (bestItem.potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
                     GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                     SaveManager.SaveActiveFlips(activeFlips);
-                }
             }
         }
     }
@@ -71,12 +69,13 @@ public class Flipper {
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95 || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName))) {
                     IngameGUI.currentAction = "Cancelling - " + flip.item.item.itemName;
                     int profit = 0;
-                    int amountInInventory = Inventory.count(flip.item.item.itemName);
+
+                    int amountInInventory = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
 
                     // Collect all items
                     GEController.CollectItem(flip.item, flip.buy, flip.amount);
                     sleepUntil(() -> Inventory.count(flip.item.item.itemName) > amountInInventory, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                    sleep(1000);
+                    sleep(3000);
 
                     boolean tradeCreated = false;
 
@@ -88,7 +87,7 @@ public class Flipper {
                             tradeCreated = true;
                         }
                         // If the flip is a buy
-                        else if (flip.buy && completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC) {
+                        else if (flip.buy && (completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
                             logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
                             int amount = Inventory.get(flip.item.item.itemName).getAmount();
                             int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
