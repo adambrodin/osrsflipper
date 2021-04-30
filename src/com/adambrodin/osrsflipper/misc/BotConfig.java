@@ -19,6 +19,7 @@ public class BotConfig {
     public static final int ITEM_VOLUME_GREAT = 200000; // Determine what min volume that gets extra score when considered
     public static final float MAX_CASHSTACK_PERCENTAGE_PER_FLIP = 0.6f; // The max percentage of the current money to use in a single flip (values less than 100 provide a broader range of items instead of spending everything on one item)
     public static final float MIN_PROFIT_FOR_FLIP = 5000;
+    public static final float MAX_NO_RESTRICTIONS_MARGIN_PERC = 100;
     public static final int MIN_GOLD_FOR_FLIP = 50000; // Minimum amount of gp in inventory to start new flips
     public static final int MIN_CASHSTACK_FOR_PERCENTAGE_FLIP = 800000; // Min amount of gp to only use MAX_CASHSTACK_PERCENTAGE_PER_FLIP instead of 100%
     public static final float MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP = 0.3f; // The max amount of % money to use for the "risky" flip (without requirements)
