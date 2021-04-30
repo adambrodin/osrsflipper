@@ -47,12 +47,12 @@ public class Flipper {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
                     availableGp = (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP);
-                    logInfo("The next flip will be fetched without using volume/margin rules!");
+                    log("The next flip will be fetched without using volume/margin rules!");
                     bestItem = flipFinder.GetBestItem(availableGp, true);
                     bestItem.skippedRequirements = true;
                 }
 
-                if(bestItem.potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
+                if (bestItem.potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {
                     GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                     SaveManager.SaveActiveFlips(activeFlips);
                 }
@@ -79,9 +79,14 @@ public class Flipper {
                     boolean tradeCreated = false;
 
                     if (GrandExchange.getFirstOpenSlot() != -1) {
+                        // No items were bought, simply remove flip
+                        if (flip.buy && !GEController.ItemInSlot(flip.item) && !Inventory.contains(flip.item.item.itemName)) {
+                            // Remove used limit (no limit was used)
+                            SaveManager.RemoveLimit(flip.item, flip.amount);
+                            tradeCreated = true;
+                        }
                         // If the flip is a buy
-                        if (flip.buy) {
-                            if (Inventory.contains(flip.item.item.itemName)) {
+                        else if (flip.buy && completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC) {
                                 logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
                                 int amount = Inventory.get(flip.item.item.itemName).getAmount();
                                 int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
@@ -99,12 +104,7 @@ public class Flipper {
                                     activeFlips.add(sellFlip);
                                     logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
                                 }
-                            } else if (!GEController.ItemInSlot(flip.item)) { // No items were bought, simply remove flip
-                                // Remove used limit (no limit was used)
-                                SaveManager.RemoveLimit(flip.item, flip.amount);
-                                tradeCreated = true;
-                            }
-                            // If the flip is a sell and the inventory still contains the item
+                            // If the flip is a sell and the inventory still contains the item or if the item should be force-selled because of low % completion
                         } else if (Inventory.contains(flip.item.item.itemName)) {
                             // Force sell the rest of the items that weren't sold
                             int amount = Inventory.get(flip.item.item.itemName).getAmount();
@@ -117,7 +117,7 @@ public class Flipper {
                             GrandExchange.collect();
                             sleep(1000);
                             sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                        } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item)) { // All items were fully sold, simply remove flip
+                        } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item) || (!Inventory.contains(flip.item.item.itemName) && !GEController.ItemInSlot(flip.item))) { // All items were fully sold, simply remove flip
                             profit += flip.amount * flip.item.marginGp;
                             logInfo("Flip [SELL] - (" + flip.amount + "x " + flip.item.item.itemName + ") is fully sold, removing!");
                             tradeCreated = true;
