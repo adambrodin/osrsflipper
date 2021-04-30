@@ -71,10 +71,12 @@ public class Flipper {
                 if (activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= 95 || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName))) {
                     IngameGUI.currentAction = "Cancelling - " + flip.item.item.itemName;
                     int profit = 0;
+                    int amountInInventory = Inventory.count(flip.item.item.itemName);
 
                     // Collect all items
                     GEController.CollectItem(flip.item, flip.buy, flip.amount);
-                    sleep(2500);
+                    sleepUntil(() -> Inventory.count(flip.item.item.itemName) > amountInInventory, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                    sleep(1000);
 
                     boolean tradeCreated = false;
 
@@ -87,23 +89,23 @@ public class Flipper {
                         }
                         // If the flip is a buy
                         else if (flip.buy && completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC) {
-                                logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
-                                int amount = Inventory.get(flip.item.item.itemName).getAmount();
-                                int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
+                            logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
+                            int amount = Inventory.get(flip.item.item.itemName).getAmount();
+                            int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
 
-                                // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
-                                SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
-                                tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
-                                if (tradeCreated) {
-                                    sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
-                                    ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
-                                    sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
-                                    if (flip.item.skippedRequirements) {
-                                        sellFlip.item.skippedRequirements = true;
-                                    }
-                                    activeFlips.add(sellFlip);
-                                    logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
+                            // Subtracts the used limit by the ones that were not bought (eg 500 out of 1000 bought, remove 500 from used limit)
+                            SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amount);
+                            tradeCreated = GrandExchange.sellItem(flip.item.item.itemName, amount, sellPrice);
+                            if (tradeCreated) {
+                                sleepUntil(() -> GEController.ItemInSlot(flip.item), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                                ActiveFlip sellFlip = new ActiveFlip(false, amount, flip.item);
+                                sellFlip.item.potentialProfitGp = amount * flip.item.marginGp;
+                                if (flip.item.skippedRequirements) {
+                                    sellFlip.item.skippedRequirements = true;
                                 }
+                                activeFlips.add(sellFlip);
+                                logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
+                            }
                             // If the flip is a sell and the inventory still contains the item or if the item should be force-selled because of low % completion
                         } else if (Inventory.contains(flip.item.item.itemName)) {
                             // Force sell the rest of the items that weren't sold
