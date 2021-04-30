@@ -111,12 +111,12 @@ public class GEController {
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
                 }
             }
+
+            if (slot != -1 && !IngameGUI.currentAction.equals("Can't get completed percentage for: " + item.item.itemName + "!")) {
+                IngameGUI.currentAction = "Can't get completed percentage for: " + item.item.itemName + "!";
+            }
         } catch (Exception e) {
             log(e.getMessage());
-        }
-
-        if (!IngameGUI.currentAction.equals("Can't get completed percentage for: " + item.item.itemName + "!")) {
-            IngameGUI.currentAction = "Can't get completed percentage for: " + item.item.itemName + "!";
         }
 
         // Item not found
@@ -145,12 +145,12 @@ public class GEController {
                     return geItem.getSlot();
                 }
             }
+
+            if (!Inventory.contains(item.item.itemName) && !IngameGUI.currentAction.equals(item.item.itemName + " not found in any slot!")) {
+                IngameGUI.currentAction = item.item.itemName + " not found in any slot!";
+            }
         } catch (Exception e) {
             log(e.getMessage());
-        }
-
-        if (!IngameGUI.currentAction.equals(item.item.itemName + " not found in any slot!")) {
-            IngameGUI.currentAction = item.item.itemName + " not found in any slot!";
         }
 
         // Item not found
