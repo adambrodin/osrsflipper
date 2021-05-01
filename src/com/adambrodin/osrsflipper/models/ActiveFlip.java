@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.models;
 
 import com.adambrodin.osrsflipper.core.GEController;
+import com.adambrodin.osrsflipper.gui.IngameGUI;
 import com.adambrodin.osrsflipper.io.SaveManager;
 
 public class ActiveFlip {
@@ -23,5 +24,12 @@ public class ActiveFlip {
         }
 
         SaveManager.tradingInfo.totalFlipsInitiated++;
+    }
+
+    @Override
+    public String toString() {
+        return "Flip [" + (buy ? "BUY" : "SELL") + "] - (" + amount + "x " + item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(item.potentialProfitGp, true)
+                + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) item.averagedVolume, true) + "/HR - Margin (" + item.marginGp + "gp - " + String.format("%.2f", item.marginPerc) + "%) - Average Low Price: " +
+                item.avgLowPrice + "gp";
     }
 }

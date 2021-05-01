@@ -52,8 +52,8 @@ public class Flipper {
                     bestItem.skippedRequirements = true;
                 }
 
-                    GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
-                    SaveManager.SaveActiveFlips(activeFlips);
+                GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
+                SaveManager.SaveActiveFlips(activeFlips);
             }
         }
     }
@@ -88,7 +88,7 @@ public class Flipper {
                         }
                         // If the flip is a buy
                         else if (flip.buy && (completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
-                            logInfo("Flip [BUY] - (" + flip.amount + "x " + flip.item.item.itemName + ") is done! - Selling!");
+                            logInfo(flip.toString() + " is DONE. - Selling!");
                             int amount = Inventory.get(flip.item.item.itemName).getAmount();
                             int sellPrice = flip.item.avgLowPrice + flip.item.marginGp;
 
@@ -103,7 +103,7 @@ public class Flipper {
                                     sellFlip.item.skippedRequirements = true;
                                 }
                                 activeFlips.add(sellFlip);
-                                logInfo("Added new active flip [SELL]: " + amount + "x " + flip.item.item.itemName + " for " + sellPrice + "gp each - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
+                                logInfo("Added new active " + sellFlip.toString() + " - potential profit: " + IngameGUI.GetFormattedGold(sellFlip.item.potentialProfitGp, true));
                             }
                             // If the flip is a sell and the inventory still contains the item or if the item should be force-selled because of low % completion
                         } else if (Inventory.contains(flip.item.item.itemName)) {
@@ -120,7 +120,7 @@ public class Flipper {
                             sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                         } else if (completedPercentage >= 100 && !GEController.ItemInSlot(flip.item) || (!Inventory.contains(flip.item.item.itemName) && !GEController.ItemInSlot(flip.item))) { // All items were fully sold, simply remove flip
                             profit += flip.amount * flip.item.marginGp;
-                            logInfo("Flip [SELL] - (" + flip.amount + "x " + flip.item.item.itemName + ") is fully sold, removing!");
+                            logInfo(flip.toString() + " is fully SOLD, removing!");
                             tradeCreated = true;
                         }
 
@@ -128,7 +128,7 @@ public class Flipper {
                             if (!flip.buy) {
                                 // Display the profit
                                 IngameGUI.sessionProfit += profit;
-                                logInfo("Flip [SELL]" + " - (" + flip.amount + "x " + flip.item.item.itemName + ") ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                                logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                             }
                             activeFlips.remove(flip);
                         }

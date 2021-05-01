@@ -31,13 +31,13 @@ public class Main extends AbstractScript {
         Flipper.activeFlips = SaveManager.GetSavedFlips();
         for (int i = 0; i < Flipper.activeFlips.size(); i++) {
             if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
-                log("Flip no longer active, removing! - " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
+                log("Flip no longer active, removing! - " + Flipper.activeFlips.get(i).toString());
                 Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
                 SaveManager.SaveActiveFlips(Flipper.activeFlips);
                 continue;
             }
 
-            log("Loaded saved flip: " + "[" + (Flipper.activeFlips.get(i).buy ? "BUY" : "SELL") + "]: " + Flipper.activeFlips.get(i).amount + "x " + Flipper.activeFlips.get(i).item.item.itemName);
+            log("Loaded saved flip: " + Flipper.activeFlips.get(i).toString());
         }
     }
 
