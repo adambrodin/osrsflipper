@@ -6,7 +6,6 @@ import com.adambrodin.osrsflipper.logic.FlipFinder;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
-import com.adambrodin.osrsflipper.models.BuyingLimit;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
@@ -60,11 +59,10 @@ public class Flipper {
 
     private static void CheckFlips() {
         if (!SaveManager.tradingInfo.usedBuyingLimits.isEmpty()) {
-            for (BuyingLimit limit : SaveManager.tradingInfo.usedBuyingLimits) {
-                if (Duration.between(LocalDateTime.now(), limit.expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
-                    SaveManager.tradingInfo.usedBuyingLimits.remove(limit);
-                    logInfo("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
-                    continue;
+            for (int i = 0; i < SaveManager.tradingInfo.usedBuyingLimits.size() - 1; i++) {
+                if (Duration.between(LocalDateTime.now(), SaveManager.tradingInfo.usedBuyingLimits.get(i).expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
+                    SaveManager.tradingInfo.usedBuyingLimits.remove(i);
+                    logInfo("Removed " + SaveManager.tradingInfo.usedBuyingLimits.get(i).amountUsed + "x used limit from " + SaveManager.tradingInfo.usedBuyingLimits.get(i).item.item.itemName + "! - Surpassed time limit.");
                 }
             }
         }
