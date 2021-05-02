@@ -12,7 +12,7 @@ import static org.dreambot.api.methods.MethodProvider.*;
 
 public class GEController {
     // Buy/sell in the GE
-    public static void TransactItem(FlipItem item, boolean buy, int amount) {
+    public static ActiveFlip TransactItem(FlipItem item, boolean buy, int amount) {
         boolean tradeCreated;
 
         int price;
@@ -40,9 +40,12 @@ public class GEController {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
                 logInfo(flip.toString());
                 Flipper.activeFlips.add(flip);
+                return flip;
             }
             sleep(1000);
         }
+
+        return null;
     }
 
     public static boolean ItemInSlot(FlipItem item) {
@@ -99,6 +102,20 @@ public class GEController {
         }
 
         return amountOfSlots;
+    }
+
+    public static int GetTransferredValue(FlipItem item) {
+        try {
+            for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                if (geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
+                    return geItem.getTransferredValue();
+                }
+            }
+        } catch (Exception e) {
+            log(e.getMessage());
+        }
+
+        return -1;
     }
 
     public static float GetCompletedPercentage(FlipItem item, int amount) {

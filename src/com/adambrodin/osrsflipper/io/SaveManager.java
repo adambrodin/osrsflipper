@@ -18,8 +18,8 @@ import static org.dreambot.api.methods.MethodProvider.log;
 import static org.dreambot.api.methods.MethodProvider.logInfo;
 
 public class SaveManager {
-    public static int sessionStartFlipsInitiated;
     private static final Gson gson = new Gson();
+    public static int sessionStartFlipsInitiated;
     public static TradingInfo tradingInfo;
 
     public static void Save() {
@@ -33,7 +33,7 @@ public class SaveManager {
 
     public static void Load() {
         if (tradingInfo == null) {
-            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>(), 0, 0, 0);
+            tradingInfo = new TradingInfo(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 0, 0, 0);
         }
 
         // Sets tradingInfo to data from the file
@@ -113,6 +113,11 @@ public class SaveManager {
 
     public static void AddUsedLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.add(new BuyingLimit(item, amount, LocalDateTime.now().plusHours(BotConfig.BUYING_LIMIT_HOURS)));
+        Save();
+    }
+
+    public static void AddCompletedFlip(ActiveFlip flip) {
+        tradingInfo.completedFlips.add(flip);
         Save();
     }
 

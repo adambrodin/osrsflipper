@@ -9,7 +9,7 @@ public class ActiveFlip {
     public boolean buy;
     public int amount;
     public FlipItem item;
-    public long startedTimeEpochsMs;
+    public long startedTimeEpochsMs, completedEpochsMs;
 
     public ActiveFlip(boolean buy, int amount, FlipItem item) {
         this.buy = buy;
