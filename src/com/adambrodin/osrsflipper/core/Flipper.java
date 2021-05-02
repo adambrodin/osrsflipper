@@ -84,6 +84,7 @@ public class Flipper {
                 // Collect the items/end the active transaction
                 GEController.CollectItem(flip.item, flip.buy, flip.amount);
                 sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                sleep(2000);
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.get(flip.item.item.itemName).getAmount() : 0;
 
                 if (flip.buy) {
@@ -102,16 +103,10 @@ public class Flipper {
                         }
 
                         activeFlips.add(normalSellFlip);
-                    }
-
-                    // Limit not reached - force-sell items
-                    else if (Inventory.contains(flip.item.item.itemName)) {
+                    } else if (Inventory.contains(flip.item.item.itemName)) { // Limit not reached - force-sell items
                         int forceProfit = ForceSell(flip);
                         profit += forceProfit;
-                    }
-
-                    // No items were bought
-                    else {
+                    } else {  // No items were bought
                         SaveManager.RemoveLimit(flip.item, flip.amount);
                     }
                 } else {
@@ -119,8 +114,6 @@ public class Flipper {
                     if (completedPercentage >= 100) {
                         profit = flip.amount * flip.item.marginGp;
                     } else {
-                        logInfo("Force-selling " + amountInInv + "x " + flip.item.item.itemName);
-
                         int forceProfit = ForceSell(flip);
                         profit += forceProfit;
                     }
@@ -129,7 +122,9 @@ public class Flipper {
                 IngameGUI.sessionProfit += profit;
                 flip.completedEpochsMs = System.currentTimeMillis();
                 SaveManager.AddCompletedFlip(flip);
-                logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                if (!flip.buy) {
+                    logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                }
                 activeFlips.remove(activeFlips.get(i));
             }
         }
@@ -137,6 +132,7 @@ public class Flipper {
 
     private static int ForceSell(ActiveFlip flip) {
         int amount = Inventory.count(flip.item.item.itemName);
+        logInfo("Force-selling " + amount + "x " + flip.item.item.itemName);
         GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
         sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, amount) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);

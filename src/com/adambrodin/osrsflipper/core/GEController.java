@@ -38,7 +38,7 @@ public class GEController {
             sleepUntil(() -> GEController.ItemInSlot(item), 5000);
             if (GEController.ItemInSlot(item)) {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
-                logInfo(flip.toString());
+                logInfo("Created new " + flip.toString());
                 Flipper.activeFlips.add(flip);
                 return flip;
             }

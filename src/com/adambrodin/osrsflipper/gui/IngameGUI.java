@@ -38,7 +38,7 @@ public class IngameGUI {
             Dimension overlaySize = new Dimension(chatboxWidget.getWidth(), chatboxWidget.getHeight());
             int x = chatboxWidget.getX(), y = chatboxWidget.getY() - BotConfig.OVERLAY_TEXT_Y_OFFSET;
 
-            g2d.setColor(Color.magenta);
+            g2d.setColor(Color.blue);
             g2d.fillRect(x, y, overlaySize.width, overlaySize.height);
             g2d.setFont(BotConfig.OVERLAY_FONT);
             g2d.setColor(Color.WHITE);
@@ -46,11 +46,7 @@ public class IngameGUI {
             g2d.drawString(currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
             g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit, true), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
-
-            if (sessionProfit > 0) {
-                g2d.drawString("GP/HOUR: " + GetFormattedGold(((sessionProfit / GetTimeSeconds(loggedInMillis)) * 3600), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4)
-                ;
-            }
+            g2d.drawString("GP/HOUR: " + (sessionProfit != 0 ? GetFormattedGold(((sessionProfit / GetTimeSeconds(loggedInMillis)) * 3600), false) : "-"), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
 
             if (startingCash > 0) {
                 g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);

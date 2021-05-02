@@ -50,8 +50,8 @@ public class BotConfig {
     // GUI
     public static final int OVERLAY_TEXT_X_OFFSET = 3;
     public static final int OVERLAY_TEXT_Y_OFFSET = 25;
-    public static final Font OVERLAY_FONT = new Font("Consolas", Font.BOLD, 20);
-    public static final Font SLOT_OVERLAY_FONT = new Font("Consolas", Font.PLAIN, 14);
+    public static final Font OVERLAY_FONT = new Font("Open Sans", Font.BOLD, 20);
+    public static final Font SLOT_OVERLAY_FONT = new Font("Open Sans", Font.BOLD, 14);
     // IO
     public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
     public static final String SAVED_DATA_FILE_NAME = SAVED_DATA_PATH + "OSRS_FLIPPER_DATA.json";
