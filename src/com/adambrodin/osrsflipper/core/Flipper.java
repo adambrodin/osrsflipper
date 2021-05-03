@@ -31,7 +31,7 @@ public class Flipper {
             }
         }
 
-        IngameGUI.currentAction = "Waiting for flips to update";
+        Main.currentAction = "Waiting for flips to update";
         CheckFlips();
 
         // Checks if trading is possible and then prioritises sell flips if needed
@@ -43,8 +43,8 @@ public class Flipper {
 
             int cashInInventory = Inventory.contains("Coins") ? Inventory.count("Coins") : 0;
             if (!Inventory.contains("Coins") || cashInInventory < BotConfig.MIN_GOLD_FOR_FLIP) {
-                if (IngameGUI.currentAction != "Too little cash to flip!" && IngameGUI.currentAction != "Waiting for flips to update") {
-                    IngameGUI.currentAction = "Too little cash to flip!";
+                if (Main.currentAction != "Too little cash to flip!" && Main.currentAction != "Waiting for flips to update") {
+                    Main.currentAction = "Too little cash to flip!";
                 }
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 int availableGp = cashInInventory;
@@ -81,7 +81,7 @@ public class Flipper {
 
         if (activeFlips.isEmpty()) {
             log("No active flips were found!");
-            IngameGUI.currentAction = "No active flips found";
+            Main.currentAction = "No active flips found";
             return;
         }
 
@@ -136,7 +136,7 @@ public class Flipper {
                     }
                 }
 
-                IngameGUI.sessionProfit += profit;
+                Main.sessionProfit += profit;
                 flip.completedEpochsMs = System.currentTimeMillis();
                 flip.completedProfit = profit;
                 SaveManager.AddCompletedFlip(flip);

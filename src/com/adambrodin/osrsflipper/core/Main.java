@@ -15,7 +15,12 @@ import java.awt.*;
 
 @ScriptManifest(category = Category.MONEYMAKING, name = "OSRS Flipper", author = "Adam Brodin", version = 1.0)
 public class Main extends AbstractScript {
-    private boolean hasLoggedIn = false;
+    public static boolean hasLoggedIn = false;
+    public static long loggingBackInMillis;
+    public static long loggedInMillis;
+    public static String currentAction = "Idling...";
+    public static int sessionProfit = 0;
+    public static int startingCash = 0;
 
     @Override
     public void onStart() {
@@ -37,8 +42,7 @@ public class Main extends AbstractScript {
             if (!hasLoggedIn) {
                 getRandomManager().disableSolver(RandomEvent.LOGIN);
                 hasLoggedIn = true;
-                IngameGUI.hasLoggedIn = true;
-                IngameGUI.loggedInMillis = System.currentTimeMillis();
+                loggedInMillis = System.currentTimeMillis();
             }
 
             AccountSetup.SetupTrading();
@@ -47,7 +51,7 @@ public class Main extends AbstractScript {
             Flipper.ExecuteFlips();
         } else if (hasLoggedIn) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
-            IngameGUI.loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
+            loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logged out! Waiting " + BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + " minutes before logging back in.");
             sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, (BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logging back in!");
@@ -67,10 +71,10 @@ public class Main extends AbstractScript {
     @Override
     public void onExit() {
         if (hasLoggedIn) {
-            SaveManager.tradingInfo.totalUptimeSeconds += IngameGUI.GetTimeSeconds(IngameGUI.loggedInMillis);
-            SaveManager.tradingInfo.totalProfitGp += IngameGUI.sessionProfit;
+            SaveManager.tradingInfo.totalUptimeSeconds += IngameGUI.GetTimeSeconds(loggedInMillis);
+            SaveManager.tradingInfo.totalProfitGp += sessionProfit;
             SaveManager.SaveActiveFlips(Flipper.activeFlips);
-            log("Session ended! (" + IngameGUI.GetFormattedTime(IngameGUI.GetTimeSeconds(IngameGUI.loggedInMillis), false) + ") - PROFIT: " + IngameGUI.GetFormattedGold(IngameGUI.sessionProfit, true)
+            log("Session ended! (" + IngameGUI.GetFormattedTime(IngameGUI.GetTimeSeconds(loggedInMillis), false) + ") - PROFIT: " + IngameGUI.GetFormattedGold(sessionProfit, true)
                     + " - " + (SaveManager.tradingInfo.totalFlipsInitiated - SaveManager.sessionStartFlipsInitiated) + "x flips initiated.")
             ;
         }

@@ -2,6 +2,7 @@ package com.adambrodin.osrsflipper.gui;
 
 import com.adambrodin.osrsflipper.core.Flipper;
 import com.adambrodin.osrsflipper.core.GEController;
+import com.adambrodin.osrsflipper.core.Main;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import org.dreambot.api.Client;
@@ -25,15 +26,9 @@ public class IngameGUI {
             new int[]{465, 12},
             new int[]{465, 13},
             new int[]{465, 14}); // Slot eight
-    public static boolean hasLoggedIn = false;
-    public static long loggingBackInMillis;
-    public static long loggedInMillis;
-    public static String currentAction = "Idling...";
-    public static int sessionProfit = 0;
-    public static int startingCash = 0;
 
     public static void Draw(Graphics2D g2d) {
-        if (hasLoggedIn) {
+        if (Main.hasLoggedIn) {
             WidgetChild chatboxWidget = Widgets.getWidgetChild(161, 32);
             Dimension overlaySize = new Dimension(chatboxWidget.getWidth(), chatboxWidget.getHeight());
             int x = chatboxWidget.getX(), y = chatboxWidget.getY() - BotConfig.OVERLAY_TEXT_Y_OFFSET;
@@ -43,17 +38,17 @@ public class IngameGUI {
             g2d.setFont(BotConfig.OVERLAY_FONT);
             g2d.setColor(Color.WHITE);
 
-            g2d.drawString(currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
-            g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
-            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(sessionProfit, true), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
-            g2d.drawString("GP/HOUR: " + (sessionProfit != 0 ? GetFormattedGold(((sessionProfit / GetTimeSeconds(loggedInMillis)) * 3600), false) : "-"), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
+            g2d.drawString(Main.currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
+            g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(Main.loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
+            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(Main.sessionProfit, true), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+            g2d.drawString("GP/HOUR: " + (Main.sessionProfit != 0 ? GetFormattedGold(((Main.sessionProfit / GetTimeSeconds(Main.loggedInMillis)) * 3600), false) : "-"), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
 
-            if (startingCash > 0) {
-                g2d.drawString("STARTING CASH: " + GetFormattedGold(startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
+            if (Main.startingCash > 0) {
+                g2d.drawString("STARTING CASH: " + GetFormattedGold(Main.startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
             }
 
             if (Client.getGameState() == GameState.LOGIN_SCREEN) {
-                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 5, 15);
+                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((Main.loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 5, 15);
             }
 
             DrawGEOverlay(g2d);

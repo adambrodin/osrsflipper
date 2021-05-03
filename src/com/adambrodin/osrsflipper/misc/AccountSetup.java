@@ -1,6 +1,7 @@
 package com.adambrodin.osrsflipper.misc;
 
 import com.adambrodin.osrsflipper.core.Flipper;
+import com.adambrodin.osrsflipper.core.Main;
 import com.adambrodin.osrsflipper.gui.IngameGUI;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
@@ -71,7 +72,7 @@ public class AccountSetup {
                 Bank.close();
                 sleepUntil(() -> !Bank.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                 bankIsChecked = true;
-                IngameGUI.startingCash = Inventory.get("Coins").getAmount();
+                Main.startingCash = Inventory.get("Coins").getAmount();
             }
 
             if (!GrandExchange.isOpen()) {
