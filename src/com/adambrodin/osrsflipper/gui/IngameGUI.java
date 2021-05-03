@@ -40,11 +40,11 @@ public class IngameGUI {
 
             g2d.drawString(Main.currentAction, x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.drawString("UPTIME: " + GetFormattedTime(GetTimeSeconds(Main.loggedInMillis), false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 2);
-            g2d.drawString("SESSION PROFIT: " + GetFormattedGold(Main.sessionProfit, true), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
-            g2d.drawString("GP/HOUR: " + (Main.sessionProfit != 0 ? GetFormattedGold(((Main.sessionProfit / GetTimeSeconds(Main.loggedInMillis)) * 3600), false) : "-"), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
+            g2d.drawString("SESSION PROFIT: " + GetFormattedNumbers(Main.sessionProfit, true, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 3);
+            g2d.drawString("GP/HOUR: " + (Main.sessionProfit != 0 ? GetFormattedNumbers(((Main.sessionProfit / GetTimeSeconds(Main.loggedInMillis)) * 3600), false, false) : "-"), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 4);
 
             if (Main.startingCash > 0) {
-                g2d.drawString("STARTING CASH: " + GetFormattedGold(Main.startingCash, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
+                g2d.drawString("STARTING CASH: " + GetFormattedNumbers(Main.startingCash, false, false), x + BotConfig.OVERLAY_TEXT_X_OFFSET, y + BotConfig.OVERLAY_TEXT_Y_OFFSET * 6);
             }
 
             if (Client.getGameState() == GameState.LOGIN_SCREEN) {
@@ -69,7 +69,7 @@ public class IngameGUI {
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
                     g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 15, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 2);
-                    g2d.drawString(String.format("%.2f", GEController.GetCompletedPercentage(flip.item, flip.buy)) + "% - " + GetFormattedGold(flip.item.potentialProfitGp, true), widget.getX() + 8, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 11);
+                    g2d.drawString(String.format("%.2f", GEController.GetCompletedPercentage(flip.item, flip.buy)) + "% - " + GetFormattedNumbers(flip.item.potentialProfitGp, true, false), widget.getX() + 8, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 11);
                 }
             } else {
                 flip.slot = GEController.GetSlotFromItem(flip.item, flip.buy);
@@ -93,7 +93,7 @@ public class IngameGUI {
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
-    public static String GetFormattedGold(int gold, boolean roundGold) {
+    public static String GetFormattedNumbers(int gold, boolean roundGold, boolean isVolume) {
         int startGold = gold;
         String suffix = "K";
         if (roundGold) {
@@ -105,6 +105,6 @@ public class IngameGUI {
             }
         }
 
-        return NumberFormat.getInstance(Locale.US).format(gold) + (roundGold && startGold >= 1000 ? suffix : " gp");
+        return NumberFormat.getInstance(Locale.US).format(gold) + (roundGold && startGold >= 1000 ? suffix : !isVolume ? " gp" : "");
     }
 }

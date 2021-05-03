@@ -28,8 +28,8 @@ public class ActiveFlip {
 
     @Override
     public String toString() {
-        return "Flip [" + (buy ? "BUY" : "SELL") + "] - (" + amount + "x " + item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedGold(item.potentialProfitGp, true)
-                + "] - Averaged Volume: " + IngameGUI.GetFormattedGold((int) item.averagedVolume, true) + "/HR - Margin (" + item.marginGp + "gp - " + String.format("%.2f", item.marginPerc) + "%) - Average Low Price: " +
-                item.avgLowPrice + "gp";
+        return "Flip [" + (buy ? "BUY" : "SELL") + "] - (" + amount + "x " + item.item.itemName + ") - Potential Profit: [" + IngameGUI.GetFormattedNumbers(item.potentialProfitGp, true, false)
+                + "] - Averaged Volume: " + IngameGUI.GetFormattedNumbers((int) item.averagedVolume, true, true) + "/HR - Margin (" + item.marginGp + "gp - " + String.format("%.2f", item.marginPerc) + "%) - Average Low Price: " +
+                IngameGUI.GetFormattedNumbers(item.avgLowPrice, false, false);
     }
 }

@@ -143,7 +143,7 @@ public class Flipper {
                 CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
                 SaveManager.AddCompletedFlip(completedFlip);
                 if (!flip.buy) {
-                    logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
+                    logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
                 }
                 activeFlips.remove(activeFlips.get(i));
 
