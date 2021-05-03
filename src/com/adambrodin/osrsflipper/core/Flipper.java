@@ -22,6 +22,9 @@ public class Flipper {
     public static List<ActiveFlip> activeFlips = new ArrayList<>();
 
     public static void ExecuteFlips() {
+        IngameGUI.currentAction = "Waiting for flips to update";
+        CheckFlips();
+
         // Checks if trading is possible and then prioritises sell flips if needed
         if (AccountSetup.IsReadyToTrade() && !activeFlips.stream().anyMatch(flip -> !GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName))) {
             if (GrandExchange.isReadyToCollect()) {
@@ -51,9 +54,6 @@ public class Flipper {
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                 SaveManager.SaveActiveFlips(activeFlips);
             }
-
-            IngameGUI.currentAction = "Waiting for flips to update";
-            CheckFlips();
         }
     }
 
@@ -84,19 +84,22 @@ public class Flipper {
                 // Collect the items/end the active transaction
                 GEController.CollectItem(flip.item, flip.buy, flip.amount);
                 sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                sleep(2000);
-                int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.get(flip.item.item.itemName).getAmount() : 0;
+                sleep(3000);
+                int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
 
                 if (flip.buy) {
+                    log("Completed percentage for " + flip.item.item.itemName + " is: " + completedPercentage + "%");
+
                     // Bought over the % limit
-                    if (completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC && Inventory.contains(flip.item.item.itemName)) {
-                        // Remove the unused buying limit (if < 100% was bought)
-                        SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amountInInv);
+                    if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
 
                         ActiveFlip normalSellFlip = GEController.TransactItem(flip.item, false, amountInInv);
                         if (normalSellFlip == null) { // If something goes wrong when selling (items remain in inv)
                             return;
                         }
+
+                        // Remove the unused buying limit (if < 100% was bought)
+                        SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amountInInv);
 
                         if (flip.item.skippedRequirements) {
                             normalSellFlip.item.skippedRequirements = true;
