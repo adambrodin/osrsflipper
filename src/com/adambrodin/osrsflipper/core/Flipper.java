@@ -22,6 +22,15 @@ public class Flipper {
     public static List<ActiveFlip> activeFlips = new ArrayList<>();
 
     public static void ExecuteFlips() {
+        for (int i = 0; i < Flipper.activeFlips.size(); i++) {
+            if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
+                log("Flip no longer active, removing! - " + Flipper.activeFlips.get(i).toString());
+                Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
+                SaveManager.SaveActiveFlips(Flipper.activeFlips);
+                continue;
+            }
+        }
+
         IngameGUI.currentAction = "Waiting for flips to update";
         CheckFlips();
 
@@ -34,7 +43,9 @@ public class Flipper {
 
             int cashInInventory = Inventory.contains("Coins") ? Inventory.count("Coins") : 0;
             if (!Inventory.contains("Coins") || cashInInventory < BotConfig.MIN_GOLD_FOR_FLIP) {
-                IngameGUI.currentAction = "Too little cash to flip!";
+                if (IngameGUI.currentAction != "Too little cash to flip!" && IngameGUI.currentAction != "Waiting for flips to update") {
+                    IngameGUI.currentAction = "Too little cash to flip!";
+                }
             } else if (GEController.AmountOfSlotsAvailable() > 0) {
                 int availableGp = cashInInventory;
                 if (availableGp >= BotConfig.MIN_CASHSTACK_FOR_PERCENTAGE_FLIP && GEController.GetAvailableSlotsAmount() > 1) {
@@ -45,7 +56,7 @@ public class Flipper {
                 if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements)) {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
-                    availableGp = GEController.AmountOfSlotsAvailable() > 1 ? (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP) : cashInInventory;
+                    availableGp = GEController.AmountOfSlotsAvailable() > 1 && activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP) : cashInInventory;
                     log("The next flip will be fetched without using volume/margin rules!");
                     bestItem = flipFinder.GetBestItem(availableGp, true);
                     bestItem.skippedRequirements = true;
@@ -88,6 +99,8 @@ public class Flipper {
                 sleep(3000);
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
 
+                ActiveFlip newFlip = null;
+
                 if (flip.buy) {
                     log("Completed percentage for " + flip.item.item.itemName + " is: " + completedPercentage + "% - " + amountInInv + "x in inventory");
 
@@ -95,8 +108,8 @@ public class Flipper {
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
                         log("Selling " + flip.item.item.itemName + " normally!");
 
-                        ActiveFlip normalSellFlip = GEController.TransactItem(flip.item, false, amountInInv);
-                        if (normalSellFlip == null) { // If something goes wrong when selling (items remain in inv)
+                        newFlip = GEController.TransactItem(flip.item, false, amountInInv);
+                        if (newFlip == null) { // If something goes wrong when selling (items remain in inv)
                             return;
                         }
 
@@ -104,10 +117,9 @@ public class Flipper {
                         SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amountInInv);
 
                         if (flip.item.skippedRequirements) {
-                            normalSellFlip.item.skippedRequirements = true;
+                            newFlip.item.skippedRequirements = true;
                         }
 
-                        activeFlips.add(normalSellFlip);
                     } else if (Inventory.contains(flip.item.item.itemName)) { // Limit not reached - force-sell items
                         int forceProfit = ForceSell(flip);
                         profit += forceProfit;
@@ -132,6 +144,10 @@ public class Flipper {
                     logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                 }
                 activeFlips.remove(activeFlips.get(i));
+
+                if (newFlip != null) {
+                    activeFlips.add(newFlip);
+                }
             }
         }
     }

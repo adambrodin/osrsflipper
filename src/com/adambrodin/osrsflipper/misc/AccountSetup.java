@@ -1,9 +1,7 @@
 package com.adambrodin.osrsflipper.misc;
 
 import com.adambrodin.osrsflipper.core.Flipper;
-import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.gui.IngameGUI;
-import com.adambrodin.osrsflipper.io.SaveManager;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.methods.Calculations;
