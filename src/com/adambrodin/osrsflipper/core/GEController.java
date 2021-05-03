@@ -66,7 +66,7 @@ public class GEController {
         try {
             if (GrandExchange.isOpen()) {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                    if (geItem != null && geItem.getItem().getName().equals(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
+                    if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
                         if (GetCompletedPercentage(item, amount) < 100) {
                             GrandExchange.cancelOffer(geItem.getSlot());

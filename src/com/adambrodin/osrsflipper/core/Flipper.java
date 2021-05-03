@@ -53,6 +53,7 @@ public class Flipper {
 
                 GEController.TransactItem(bestItem, true, bestItem.maxAmountAvailable);
                 SaveManager.SaveActiveFlips(activeFlips);
+                sleep(500);
             }
         }
     }
@@ -77,21 +78,22 @@ public class Flipper {
             ActiveFlip flip = activeFlips.get(i);
             float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
             float completedPercentage = GEController.GetCompletedPercentage(flip.item, flip.amount);
-            boolean shouldExitFlip = activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= BotConfig.MAX_FLIP_COMPLETED_PERC_EXIT || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName));
+            boolean shouldExitFlip = activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= BotConfig.MAX_FLIP_COMPLETED_PERC_EXIT || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) && GEController.GetAvailableSlotsAmount() > 0;
             if (shouldExitFlip) {
                 int profit = 0;
 
                 // Collect the items/end the active transaction
                 GEController.CollectItem(flip.item, flip.buy, flip.amount);
-                sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
+                sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
                 sleep(3000);
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
 
                 if (flip.buy) {
-                    log("Completed percentage for " + flip.item.item.itemName + " is: " + completedPercentage + "%");
+                    log("Completed percentage for " + flip.item.item.itemName + " is: " + completedPercentage + "% - " + amountInInv + "x in inventory");
 
                     // Bought over the % limit
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
+                        log("Selling " + flip.item.item.itemName + " normally!");
 
                         ActiveFlip normalSellFlip = GEController.TransactItem(flip.item, false, amountInInv);
                         if (normalSellFlip == null) { // If something goes wrong when selling (items remain in inv)
