@@ -77,13 +77,13 @@ public class Flipper {
         for (int i = 0; i < activeFlips.size(); i++) {
             ActiveFlip flip = activeFlips.get(i);
             float activeTimeMinutes = (float) ((System.currentTimeMillis() - flip.startedTimeEpochsMs) / 1000) / 60;
-            float completedPercentage = GEController.GetCompletedPercentage(flip.item, flip.amount);
+            float completedPercentage = GEController.GetCompletedPercentage(flip.item, flip.buy);
             boolean shouldExitFlip = activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= BotConfig.MAX_FLIP_COMPLETED_PERC_EXIT || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) && GEController.GetAvailableSlotsAmount() > 0;
             if (shouldExitFlip) {
                 int profit = 0;
 
                 // Collect the items/end the active transaction
-                GEController.CollectItem(flip.item, flip.buy, flip.amount);
+                GEController.CollectItem(flip.item, flip.buy);
                 sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
                 sleep(3000);
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
@@ -126,6 +126,7 @@ public class Flipper {
 
                 IngameGUI.sessionProfit += profit;
                 flip.completedEpochsMs = System.currentTimeMillis();
+                flip.completedProfit = profit;
                 SaveManager.AddCompletedFlip(flip);
                 if (!flip.buy) {
                     logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
@@ -139,7 +140,7 @@ public class Flipper {
         int amount = Inventory.count(flip.item.item.itemName);
         logInfo("Force-selling " + amount + "x " + flip.item.item.itemName);
         GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
-        sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, amount) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
+        sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, flip.buy) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);

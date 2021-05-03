@@ -62,13 +62,13 @@ public class GEController {
     }
 
     // Returns the amount of items from slot
-    public static void CollectItem(FlipItem item, boolean isBuy, int amount) {
+    public static void CollectItem(FlipItem item, boolean isBuy) {
         try {
             if (GrandExchange.isOpen()) {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                     if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
-                        if (GetCompletedPercentage(item, amount) < 100) {
+                        if (GetCompletedPercentage(item, isBuy) < 100) {
                             GrandExchange.cancelOffer(geItem.getSlot());
                             sleep(1000);
                             GrandExchange.goBack();
@@ -118,9 +118,9 @@ public class GEController {
         return -1;
     }
 
-    public static float GetCompletedPercentage(FlipItem item, int amount) {
+    public static float GetCompletedPercentage(FlipItem item, boolean isBuy) {
         try {
-            int slot = GetSlotFromItem(item, amount);
+            int slot = GetSlotFromItem(item, isBuy);
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                 if (geItem != null && geItem.getSlot() == slot) {
                     return ((float) geItem.getTransferredAmount() / (float) geItem.getAmount()) * 100;
@@ -153,10 +153,10 @@ public class GEController {
         return availableSlots;
     }
 
-    public static int GetSlotFromItem(FlipItem item, int amount) {
+    public static int GetSlotFromItem(FlipItem item, boolean isBuy) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
-                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.getAmount() == amount) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                     return geItem.getSlot();
                 }
             }
