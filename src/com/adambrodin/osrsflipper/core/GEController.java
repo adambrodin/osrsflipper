@@ -129,7 +129,7 @@ public class GEController {
 
             if (slot != -1 && !Main.currentAction.equals("Can't get completed percentage for: " + item.item.itemName + "!")) {
                 Main.currentAction = "Can't get completed percentage for: " + item.item.itemName + "!";
-                log("Can't get completed percentage for: " + item.item.itemName + "!");
+                sleep(250);
             }
         } catch (Exception e) {
             log(e.getMessage());
@@ -164,7 +164,7 @@ public class GEController {
 
             if (!Inventory.contains(item.item.itemName) && !Main.currentAction.equals(item.item.itemName + " not found in any slot!")) {
                 Main.currentAction = item.item.itemName + " not found in any slot!";
-                log(item.item.itemName + " not found in any slot!");
+                sleep(250);
             }
         } catch (Exception e) {
             log(e.getMessage());

@@ -6,6 +6,7 @@ import com.adambrodin.osrsflipper.logic.FlipFinder;
 import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
+import com.adambrodin.osrsflipper.models.CompletedFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
@@ -112,6 +113,7 @@ public class Flipper {
                         if (newFlip == null) { // If something goes wrong when selling (items remain in inv)
                             return;
                         }
+                        newFlip.item.potentialProfitGp = amountInInv * newFlip.item.marginGp;
 
                         // Remove the unused buying limit (if < 100% was bought)
                         SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amountInInv);
@@ -137,9 +139,9 @@ public class Flipper {
                 }
 
                 Main.sessionProfit += profit;
-                flip.completedEpochsMs = System.currentTimeMillis();
-                flip.completedProfit = profit;
-                SaveManager.AddCompletedFlip(flip);
+
+                CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
+                SaveManager.AddCompletedFlip(completedFlip);
                 if (!flip.buy) {
                     logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedGold(profit, true));
                 }

@@ -1,10 +1,7 @@
 package com.adambrodin.osrsflipper.io;
 
 import com.adambrodin.osrsflipper.misc.BotConfig;
-import com.adambrodin.osrsflipper.models.ActiveFlip;
-import com.adambrodin.osrsflipper.models.BuyingLimit;
-import com.adambrodin.osrsflipper.models.FlipItem;
-import com.adambrodin.osrsflipper.models.TradingInfo;
+import com.adambrodin.osrsflipper.models.*;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -116,7 +113,7 @@ public class SaveManager {
         Save();
     }
 
-    public static void AddCompletedFlip(ActiveFlip flip) {
+    public static void AddCompletedFlip(CompletedFlip flip) {
         tradingInfo.completedFlips.add(flip);
         Save();
     }

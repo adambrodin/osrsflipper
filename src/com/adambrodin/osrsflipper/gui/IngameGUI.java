@@ -48,7 +48,7 @@ public class IngameGUI {
             }
 
             if (Client.getGameState() == GameState.LOGIN_SCREEN) {
-                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((Main.loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 5, 15);
+                g2d.drawString("TIME BEFORE LOGGING BACK IN: " + GetFormattedTime((int) ((Main.loggingBackInMillis - System.currentTimeMillis()) / 1000), false), 3, 15);
             }
 
             DrawGEOverlay(g2d);

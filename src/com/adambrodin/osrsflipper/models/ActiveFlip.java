@@ -8,9 +8,8 @@ public class ActiveFlip {
     public int slot;
     public boolean buy;
     public int amount;
-    public int completedProfit;
     public FlipItem item;
-    public long startedTimeEpochsMs, completedEpochsMs;
+    public long startedTimeEpochsMs;
 
     public ActiveFlip(boolean buy, int amount, FlipItem item) {
         this.buy = buy;
