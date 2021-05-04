@@ -56,11 +56,11 @@ public class IngameGUI {
     }
 
     private static void DrawGEOverlay(Graphics2D g2d) {
-        for (ActiveFlip flip : Flipper.activeFlips) {
-            if (flip.slot != -1) {
-                WidgetChild widget = Widgets.getWidgetChild(slotWidgets.get(flip.slot)[0], slotWidgets.get(flip.slot)[1]);
+            for(int i = 0; i < Flipper.activeFlips.size(); i++){
+            if (Flipper.activeFlips.get(i).slot != -1) {
+                WidgetChild widget = Widgets.getWidgetChild(slotWidgets.get(Flipper.activeFlips.get(i).slot)[0], slotWidgets.get(Flipper.activeFlips.get(i).slot)[1]);
                 if (widget != null && widget.isVisible()) {
-                    if (flip.buy) {
+                    if (Flipper.activeFlips.get(i).buy) {
                         g2d.setColor(Color.green);
                     } else {
                         g2d.setColor(Color.red);
@@ -68,11 +68,11 @@ public class IngameGUI {
                     g2d.fillRect(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight() / 4);
                     g2d.setColor(Color.BLACK);
                     g2d.setFont(BotConfig.SLOT_OVERLAY_FONT);
-                    g2d.drawString(GetFormattedTime(GetTimeSeconds(flip.startedTimeEpochsMs), true), widget.getX() + 15, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 2);
-                    g2d.drawString(String.format("%.2f", GEController.GetCompletedPercentage(flip.item, flip.buy)) + "% - " + GetFormattedNumbers(flip.item.potentialProfitGp, true, false), widget.getX() + 8, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 11);
+                    g2d.drawString(GetFormattedTime(GetTimeSeconds(Flipper.activeFlips.get(i).startedTimeEpochsMs), true), widget.getX() + 15, (widget.getY() + ((widget.getHeight() / 4) / 2)) - 2);
+                    g2d.drawString(String.format("%.2f", GEController.GetCompletedPercentage(Flipper.activeFlips.get(i).item, Flipper.activeFlips.get(i).buy)) + "% - " + GetFormattedNumbers(Flipper.activeFlips.get(i).item.potentialProfitGp, true, false), widget.getX() + 8, (widget.getY() + ((widget.getHeight() / 4) / 2)) + 11);
                 }
             } else {
-                flip.slot = GEController.GetSlotFromItem(flip.item, flip.buy);
+                Flipper.activeFlips.get(i).slot = GEController.GetSlotFromItem(Flipper.activeFlips.get(i).item, Flipper.activeFlips.get(i).buy);
             }
         }
     }
