@@ -131,7 +131,7 @@ public class Flipper {
                 } else {
                     // If it's a sell flip
                     if (completedPercentage >= 100) {
-                        profit = flip.amount * flip.item.marginGp;
+                        profit = flip.amount * (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100));
                     } else {
                         int forceProfit = ForceSell(flip);
                         profit += forceProfit;
@@ -163,6 +163,6 @@ public class Flipper {
         int receivedGold = GEController.GetTransferredValue(flip.item);
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-        return receivedGold - (amount * flip.item.avgLowPrice);
+        return receivedGold - (amount * (flip.item.avgLowPrice + (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100))));
     }
 }
