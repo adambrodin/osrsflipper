@@ -73,11 +73,6 @@ public class GEController {
                             sleep(1000);
                             GrandExchange.goBack();
                             sleep(1000);
-
-                            if(!cancelled)
-                            {
-                                return;
-                            }
                         }
                         sleepUntil(GrandExchange::isReadyToCollect, BotConfig.MAX_ACTION_TIMEOUT_MS);
                         GrandExchange.collect();
