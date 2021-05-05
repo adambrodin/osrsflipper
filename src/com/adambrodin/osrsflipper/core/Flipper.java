@@ -138,7 +138,7 @@ public class Flipper {
                     }
                 }
 
-                if (!Inventory.contains(flip.item.item.itemName)) {
+                if (!Inventory.contains(flip.item.item.itemName) && GEController.GetSlotFromItem(flip.item, flip.buy) == -1) {
                     Main.sessionProfit += profit;
                     CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
                     SaveManager.AddCompletedFlip(completedFlip);
