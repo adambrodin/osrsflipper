@@ -138,17 +138,18 @@ public class Flipper {
                     }
                 }
 
-                Main.sessionProfit += profit;
+                if (!Inventory.contains(flip.item.item.itemName)) {
+                    Main.sessionProfit += profit;
+                    CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
+                    SaveManager.AddCompletedFlip(completedFlip);
+                    if (!flip.buy) {
+                        logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
+                    }
+                    activeFlips.remove(activeFlips.get(i));
 
-                CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
-                SaveManager.AddCompletedFlip(completedFlip);
-                if (!flip.buy) {
-                    logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
-                }
-                activeFlips.remove(activeFlips.get(i));
-
-                if (newFlip != null) {
-                    activeFlips.add(newFlip);
+                    if (newFlip != null) {
+                        activeFlips.add(newFlip);
+                    }
                 }
             }
         }
