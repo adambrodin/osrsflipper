@@ -69,10 +69,15 @@ public class GEController {
                     if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
                         if (GetCompletedPercentage(item, isBuy) < 100) {
-                            GrandExchange.cancelOffer(geItem.getSlot());
+                            boolean cancelled = GrandExchange.cancelOffer(geItem.getSlot());
                             sleep(1000);
                             GrandExchange.goBack();
                             sleep(1000);
+
+                            if(!cancelled)
+                            {
+                                return;
+                            }
                         }
                         sleepUntil(GrandExchange::isReadyToCollect, BotConfig.MAX_ACTION_TIMEOUT_MS);
                         GrandExchange.collect();
