@@ -139,6 +139,10 @@ public class Flipper {
                 }
 
                 if (!Inventory.contains(flip.item.item.itemName) && GEController.GetSlotFromItem(flip.item, flip.buy) == -1) {
+                    if (profit >= flip.item.potentialProfitGp * 1.5) {
+                        log("Profit for item: " + flip.item.item.itemName + " is suspiciously high, using potential profit instead. Original value: " + profit + " gp");
+                        profit = flip.item.potentialProfitGp;
+                    }
                     Main.sessionProfit += profit;
                     CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
                     SaveManager.AddCompletedFlip(completedFlip);
