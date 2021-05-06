@@ -1,6 +1,5 @@
 package com.adambrodin.osrsflipper.core;
 
-import com.adambrodin.osrsflipper.gui.IngameGUI;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
@@ -15,6 +14,9 @@ public class GEController {
     public static ActiveFlip TransactItem(FlipItem item, boolean buy, int amount) {
         boolean tradeCreated;
 
+        if (item.item.itemName.contains("(tablet)")) {
+            item.item.itemName = item.item.itemName.substring(0, item.item.itemName.indexOf("(tablet)")-1);
+        }
         int price;
         if (buy) {
             price = item.avgLowPrice;
@@ -69,7 +71,7 @@ public class GEController {
                     if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
                         if (GetCompletedPercentage(item, isBuy) < 100) {
-                            boolean cancelled = GrandExchange.cancelOffer(geItem.getSlot());
+                            GrandExchange.cancelOffer(geItem.getSlot());
                             sleep(1000);
                             GrandExchange.goBack();
                             sleep(1000);
