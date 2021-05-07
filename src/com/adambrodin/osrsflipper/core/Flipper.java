@@ -97,10 +97,9 @@ public class Flipper {
                 // Collect the items/end the active transaction
                 GEController.CollectItem(flip.item, flip.buy);
                 sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
-                if(GEController.ItemInSlot(flip.item))
-                {
-                    log("Something went wrong when collecting " + flip.item.item.itemName+"!");
-                    return;
+                if (GEController.ItemInSlot(flip.item)) {
+                    log("Something went wrong when collecting " + flip.item.item.itemName + "!");
+                    continue;
                 }
                 sleep(3000);
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;

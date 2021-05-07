@@ -15,7 +15,7 @@ public class GEController {
         boolean tradeCreated;
 
         if (item.item.itemName.contains("(tablet)")) {
-            item.item.itemName = item.item.itemName.substring(0, item.item.itemName.indexOf("(tablet)")-1);
+            item.item.itemName = item.item.itemName.substring(0, item.item.itemName.indexOf("(tablet)") - 1);
         }
         int price;
         if (buy) {
@@ -53,7 +53,7 @@ public class GEController {
     public static boolean ItemInSlot(FlipItem item) {
         for (GrandExchangeItem geItem : GrandExchange.getItems()) {
             try {
-                if (geItem != null && geItem.getItem().getName().equals(item.item.itemName)) {
+                if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return true;
                 }
             } catch (Exception e) {
@@ -87,6 +87,8 @@ public class GEController {
         } catch (Exception e) {
             log(e.getMessage());
         }
+
+        log("Couldn't collect item: [" + (isBuy ? "BUY" : "SELL") + "] " + item.item.itemName);
     }
 
     public static int AmountOfSlotsAvailable() {
