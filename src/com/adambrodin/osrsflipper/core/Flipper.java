@@ -167,7 +167,7 @@ public class Flipper {
         int amount = Inventory.count(flip.item.item.itemName);
         logInfo("Force-selling " + amount + "x " + flip.item.item.itemName);
         GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
-        sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, flip.buy) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
+        sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, false) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
