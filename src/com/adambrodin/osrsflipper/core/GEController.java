@@ -18,7 +18,7 @@ public class GEController {
             item.item.itemName = item.item.itemName.substring(0, item.item.itemName.indexOf("(tablet)") - 1);
         }
         int price;
-        if (buy) {
+        if (buy && item.marginGp > ((float) item.avgLowPrice / 100) + 1) {
             price = item.avgLowPrice;
             if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT) {
                 // Increase the price slightly to overcut
