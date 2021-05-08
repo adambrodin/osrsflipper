@@ -107,7 +107,7 @@ public class Flipper {
                 ActiveFlip newFlip = null;
 
                 if (flip.buy) {
-                    log("Completed percentage for " + flip.item.item.itemName + " is: " + completedPercentage + "% - " + amountInInv + "x in inventory");
+                    log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f",completedPercentage) + "% - " + amountInInv + "x in inventory");
 
                     // Bought over the % limit
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
