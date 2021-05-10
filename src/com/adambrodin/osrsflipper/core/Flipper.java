@@ -148,9 +148,9 @@ public class Flipper {
                         profit = flip.item.potentialProfitGp;
                     }
                     Main.sessionProfit += profit;
-                    CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
-                    SaveManager.AddCompletedFlip(completedFlip);
                     if (!flip.buy) {
+                        CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
+                        SaveManager.AddCompletedFlip(completedFlip);
                         logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
                     }
                     activeFlips.remove(activeFlips.get(i));
