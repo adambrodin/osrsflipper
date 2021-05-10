@@ -147,10 +147,14 @@ public class Flipper {
                         log("Profit for item: " + flip.item.item.itemName + " is suspiciously high, using potential profit instead. Original value: " + profit + " gp");
                         profit = flip.item.potentialProfitGp;
                     }
-                    Main.sessionProfit += profit;
-                    if (!flip.buy) {
+
+                    if(profit != 0 && profit != -1) {
+                        Main.sessionProfit += profit;
                         CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
                         SaveManager.AddCompletedFlip(completedFlip);
+                    }
+
+                    if (!flip.buy) {
                         logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
                     }
                     activeFlips.remove(activeFlips.get(i));
