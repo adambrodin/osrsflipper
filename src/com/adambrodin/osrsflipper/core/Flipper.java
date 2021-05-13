@@ -92,6 +92,11 @@ public class Flipper {
             float completedPercentage = GEController.GetCompletedPercentage(flip.item, flip.buy);
             boolean shouldExitFlip = activeTimeMinutes >= BotConfig.MAX_FLIP_ACTIVE_TIME_MINUTES || completedPercentage >= BotConfig.MAX_FLIP_COMPLETED_PERC_EXIT || (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) && GEController.GetAvailableSlotsAmount() > 0;
             if (shouldExitFlip) {
+                if (GrandExchange.isReadyToCollect()) {
+                    GrandExchange.collect();
+                    sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+                }
+
                 int profit = 0;
 
                 // Collect the items/end the active transaction

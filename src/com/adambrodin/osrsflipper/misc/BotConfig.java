@@ -55,5 +55,5 @@ public class BotConfig {
     // IO
     public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
     public static final String SAVED_DATA_FILE_NAME = SAVED_DATA_PATH + "OSRS_FLIPPER_DATA.json";
-    public static final boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
+    public static final boolean CUT_PRICES = false; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
 }
