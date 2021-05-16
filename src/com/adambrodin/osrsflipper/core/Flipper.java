@@ -115,7 +115,7 @@ public class Flipper {
                     log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f", completedPercentage) + "% - " + amountInInv + "x in inventory");
 
                     // Bought over the % limit
-                    if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
+                    if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1 || (completedPercentage > 0 && flip.amount >= BotConfig.MIN_FLIP_ITEMS_FORCE_SELL)) && Inventory.contains(flip.item.item.itemName)) {
                         log("Selling " + flip.item.item.itemName + " normally!");
 
                         newFlip = GEController.TransactItem(flip.item, false, amountInInv);

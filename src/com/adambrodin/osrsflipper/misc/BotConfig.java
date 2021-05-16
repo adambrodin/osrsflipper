@@ -24,6 +24,7 @@ public class BotConfig {
     public static final int MIN_CASHSTACK_FOR_PERCENTAGE_FLIP = 1000000; // Min amount of gp to only use MAX_CASHSTACK_PERCENTAGE_PER_FLIP instead of 100%
     public static final float MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP = 0.2f; // The max amount of % money to use for the "risky" flip (without requirements)
     public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 40;
+    public static final int MIN_FLIP_ITEMS_FORCE_SELL = 20; // The minimum amount of items to force-sell if not all items were bought
     public static final float MAX_FLIP_COMPLETED_PERC_EXIT = 92; // The maximum amount of % completed before force-exiting it
     public static final float MIN_FLIP_NORMAL_SELL_PERC = 25f; // The minimum amount of % sell to sell it normally (otherwise force-sell)
     public static final float MAX_ITEM_MARGIN_PERCENTAGE = 20; // Max percentage margin for an item to even be considered at all
@@ -55,5 +56,5 @@ public class BotConfig {
     // IO
     public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
     public static final String SAVED_DATA_FILE_NAME = SAVED_DATA_PATH + "OSRS_FLIPPER_DATA.json";
-    public static final boolean CUT_PRICES = false; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
+    public static final boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
 }
