@@ -98,10 +98,10 @@ public class IngameGUI {
         String suffix = "K";
         if (roundGold) {
             if (gold >= 1000000) {
-                gold /= 1000000;
+                gold = (int) ((float) gold / 1000000);
                 suffix = "M";
             } else if (gold >= 1000) {
-                gold /= 1000;
+                gold = (int) ((float) gold / 1000);
             }
         }
 
