@@ -112,7 +112,7 @@ public class Flipper {
                 ActiveFlip newFlip = null;
 
                 if (flip.buy) {
-                    log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f",completedPercentage) + "% - " + amountInInv + "x in inventory");
+                    log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f", completedPercentage) + "% - " + amountInInv + "x in inventory");
 
                     // Bought over the % limit
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1) && Inventory.contains(flip.item.item.itemName)) {
@@ -153,7 +153,7 @@ public class Flipper {
                         profit = flip.item.potentialProfitGp;
                     }
 
-                    if(profit != 0 && profit != -1) {
+                    if (profit != 0 && profit != -1) {
                         Main.sessionProfit += profit;
                         CompletedFlip completedFlip = new CompletedFlip(flip.item, flip.startedTimeEpochsMs, System.currentTimeMillis(), profit);
                         SaveManager.AddCompletedFlip(completedFlip);
@@ -180,6 +180,6 @@ public class Flipper {
         int receivedGold = GEController.GetTransferredValue(flip.item);
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-        return receivedGold - (amount * (flip.item.avgLowPrice + (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100))));
+        return receivedGold - (amount * (flip.item.avgLowPrice + (BotConfig.CUT_PRICES ? (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100)) : 1)));
     }
 }
