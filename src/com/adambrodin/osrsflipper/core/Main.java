@@ -6,6 +6,7 @@ import com.adambrodin.osrsflipper.misc.AccountSetup;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
+import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.randoms.RandomEvent;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
@@ -51,7 +52,7 @@ public class Main extends AbstractScript {
             Flipper.ExecuteFlips();
         } else if (hasLoggedIn) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
-            loggingBackInMillis = System.currentTimeMillis() + ((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
+            loggingBackInMillis = System.currentTimeMillis() + (((BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + Calculations.random(-3, 3)) * 60) * 1000);
             log("Logged out! Waiting " + BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + " minutes before logging back in.");
             sleepUntil(() -> Client.getGameState() == GameState.LOGGED_IN, (BotConfig.LOGOUT_SLEEP_DURATION_MINUTES * 60) * 1000);
             log("Logging back in!");
