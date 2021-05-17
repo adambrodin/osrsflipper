@@ -55,7 +55,7 @@ public class Flipper {
 
                 FlipItem bestItem;
                 if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements)) {
-                    bestItem = flipFinder.GetBestItem(availableGp, false);
+                    bestItem = flipFinder.GetBestItem((int) (availableGp * BotConfig.MAX_NO_RESTRICTIONS_MAX_CASH_PERC), false);
                 } else {
                     availableGp = GEController.AmountOfSlotsAvailable() > 1 && activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_CASHSTACK_PERCENTAGE_FOR_RISKY_FLIP) : cashInInventory;
                     log("The next flip will be fetched without using volume/margin rules!");
