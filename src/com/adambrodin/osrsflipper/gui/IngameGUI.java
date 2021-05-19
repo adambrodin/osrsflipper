@@ -4,7 +4,6 @@ import com.adambrodin.osrsflipper.core.Flipper;
 import com.adambrodin.osrsflipper.core.GEController;
 import com.adambrodin.osrsflipper.core.Main;
 import com.adambrodin.osrsflipper.misc.BotConfig;
-import com.adambrodin.osrsflipper.models.ActiveFlip;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.methods.widget.Widgets;
@@ -56,7 +55,7 @@ public class IngameGUI {
     }
 
     private static void DrawGEOverlay(Graphics2D g2d) {
-            for(int i = 0; i < Flipper.activeFlips.size(); i++){
+        for (int i = 0; i < Flipper.activeFlips.size(); i++) {
             if (Flipper.activeFlips.get(i).slot != -1) {
                 WidgetChild widget = Widgets.getWidgetChild(slotWidgets.get(Flipper.activeFlips.get(i).slot)[0], slotWidgets.get(Flipper.activeFlips.get(i).slot)[1]);
                 if (widget != null && widget.isVisible()) {
@@ -97,10 +96,11 @@ public class IngameGUI {
         int startGold = gold;
         String suffix = "K";
         if (roundGold) {
-            if (gold >= 1000000) {
-                gold = (int) ((float) gold / 1000000);
-                suffix = "M";
-            } else if (gold >= 1000) {
+            //if (gold >= 1000000) {
+            // gold = (int) ((float) gold / 1000000);
+            // suffix = "M";
+            /* }*/
+            if (gold >= 1000) {
                 gold = (int) ((float) gold / 1000);
             }
         }
