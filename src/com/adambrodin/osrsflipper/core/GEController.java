@@ -88,7 +88,8 @@ public class GEController {
             log(e.getMessage());
         }
 
-        log("Couldn't collect item: [" + (isBuy ? "BUY" : "SELL") + "] " + item.item.itemName);
+        Main.currentAction = "Couldn't collect item: [" + (isBuy ? "BUY" : "SELL") + "] " + item.item.itemName;
+        sleep(500);
     }
 
     public static int AmountOfSlotsAvailable() {

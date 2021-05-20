@@ -57,7 +57,7 @@ public class Flipper {
                 if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements)) {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
-                    availableGp = GEController.AmountOfSlotsAvailable() > 1 && activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_NO_RESTRICTIONS_CASHSTACK_PERC) : cashInInventory;
+                    availableGp = activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_NO_RESTRICTIONS_CASHSTACK_PERC) : cashInInventory;
                     log("The next flip will be fetched without using volume/margin rules!");
                     bestItem = flipFinder.GetBestItem(availableGp, true);
                     bestItem.skippedRequirements = true;
@@ -103,7 +103,8 @@ public class Flipper {
                 GEController.CollectItem(flip.item, flip.buy);
                 sleepUntil(() -> (!GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName)) || completedPercentage < 0, BotConfig.MAX_ACTION_TIMEOUT_MS);
                 if (GEController.ItemInSlot(flip.item)) {
-                    log("Something went wrong when collecting " + flip.item.item.itemName + "!");
+                    Main.currentAction = "Something went wrong when collecting " + flip.item.item.itemName + "!";
+                    sleep(500);
                     continue;
                 }
                 sleep(3000);
