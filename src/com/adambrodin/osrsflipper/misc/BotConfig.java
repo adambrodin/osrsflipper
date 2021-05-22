@@ -34,7 +34,7 @@ public class BotConfig {
     public static final float MIN_ITEM_VOLUME = 20000; // Min volume for an item in the endpoint timespan
     public static final int MIN_ITEM_PRICE_FOR_CUT = 100; // Min item price for it to be cut (to prevent cutting very cheap items)
 
-    public static final List<String> BLOCKED_ITEMS = Arrays.asList("Swamp tar", "Swamp paste", "Thread", "Bucket of water", "Bucket", "Jug", "Jug of water", "Fishing bait", "Trading sticks");
+    public static final List<String> BLOCKED_ITEMS = Arrays.asList("Swamp tar", "Swamp paste", "Thread", "Bucket of water", "Bucket", "Jug", "Jug of water", "Fishing bait", "Trading sticks", "Old school bond");
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);
     // TIMEOUTS
