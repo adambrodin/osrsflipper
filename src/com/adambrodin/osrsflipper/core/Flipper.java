@@ -54,7 +54,7 @@ public class Flipper {
                 }
 
                 FlipItem bestItem;
-                if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements)) {
+                if (activeFlips.stream().anyMatch(flip -> flip.item.skippedRequirements) || !BotConfig.INCLUDE_RISKY_FLIP) {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
                     availableGp = activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_NO_RESTRICTIONS_CASHSTACK_PERC) : cashInInventory;
