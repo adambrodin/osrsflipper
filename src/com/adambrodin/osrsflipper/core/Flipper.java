@@ -75,7 +75,7 @@ public class Flipper {
             for (int i = 0; i < SaveManager.tradingInfo.usedBuyingLimits.size() - 1; i++) {
                 if (Duration.between(LocalDateTime.now(), SaveManager.tradingInfo.usedBuyingLimits.get(i).expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
                     SaveManager.tradingInfo.usedBuyingLimits.remove(i);
-                    logInfo("Removed " + SaveManager.tradingInfo.usedBuyingLimits.get(i).amountUsed + "x used limit from " + SaveManager.tradingInfo.usedBuyingLimits.get(i).item.item.itemName + "! - Surpassed time limit.");
+                    logInfo("(SURPASSED TIME LIMIT): Removed " + SaveManager.tradingInfo.usedBuyingLimits.get(i).amountUsed + "x used limit from " + SaveManager.tradingInfo.usedBuyingLimits.get(i).item.item.itemName + "!");
                 }
             }
         }
@@ -179,6 +179,12 @@ public class Flipper {
         GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
         sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, false) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);
+        if (receivedGold == -1) {
+            logInfo("RECEIVED GOLD SET TO AVGLOWPRICE");
+            receivedGold = amount * flip.item.avgLowPrice;
+        }
+
+        logInfo("RECEIVED GOLD FROM SLOT: " + receivedGold + "gp");
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
         return receivedGold - (amount * (flip.item.avgLowPrice + (BotConfig.CUT_PRICES ? (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100)) : 1)));

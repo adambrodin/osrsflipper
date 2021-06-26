@@ -28,7 +28,7 @@ public class IngameGUI {
 
     public static void Draw(Graphics2D g2d) {
         if (Main.hasLoggedIn) {
-            WidgetChild chatboxWidget = Widgets.getWidgetChild(161, 32);
+            WidgetChild chatboxWidget = Widgets.getWidgetChild(161, 37);
             Dimension overlaySize = new Dimension(chatboxWidget.getWidth(), chatboxWidget.getHeight());
             int x = chatboxWidget.getX(), y = chatboxWidget.getY() - BotConfig.OVERLAY_TEXT_Y_OFFSET;
 
