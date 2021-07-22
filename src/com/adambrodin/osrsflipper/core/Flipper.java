@@ -176,7 +176,7 @@ public class Flipper {
     private static int ForceSell(ActiveFlip flip) {
         int amount = Inventory.count(flip.item.item.itemName);
         logInfo("Force-selling " + amount + "x " + flip.item.item.itemName);
-        GrandExchange.sellItem(flip.item.item.itemName, amount, 1);
+        GrandExchange.sellItem(flip.item.item.itemName, amount, (int) (flip.item.avgLowPrice * 0.5));
         sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, false) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);
         if (receivedGold == -1) {
