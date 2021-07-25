@@ -77,7 +77,7 @@ public class Main extends AbstractScript {
             SaveManager.tradingInfo.totalProfitGp += sessionProfit;
             SaveManager.SaveActiveFlips(Flipper.activeFlips);
             log("Session ended! (" + IngameGUI.GetFormattedTime(IngameGUI.GetTimeSeconds(loggedInMillis), false) + ") - PROFIT: " + IngameGUI.GetFormattedNumbers(sessionProfit, true, false)
-                    + " - " + (SaveManager.tradingInfo.totalFlipsInitiated - SaveManager.sessionStartFlipsInitiated) + "x flips initiated.")
+                    + " - " + (SaveManager.tradingInfo.totalFlipsInitiated - SaveManager.sessionStartFlipsInitiated) + "x flips initiated. - STARTING BALANCE: " + IngameGUI.GetFormattedNumbers(startingCash, false, false))
             ;
         }
         super.onExit();
