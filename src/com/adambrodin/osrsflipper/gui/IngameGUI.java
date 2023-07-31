@@ -28,12 +28,12 @@ public class IngameGUI {
 
     public static void Draw(Graphics2D g2d) {
         if (Main.hasLoggedIn) {
-            WidgetChild chatboxWidget = Widgets.getWidgetChild(161, 37);
+            WidgetChild chatboxWidget = Widgets.getWidgetChild(162, 35);
             Dimension overlaySize = new Dimension(chatboxWidget.getWidth(), chatboxWidget.getHeight());
             int x = chatboxWidget.getX(), y = chatboxWidget.getY() - BotConfig.OVERLAY_TEXT_Y_OFFSET;
 
             g2d.setColor(Color.blue);
-            g2d.fillRect(x, y, overlaySize.width, overlaySize.height);
+            g2d.fillRect(x, y, overlaySize.width, overlaySize.height + BotConfig.OVERLAY_TEXT_Y_OFFSET);
             g2d.setFont(BotConfig.OVERLAY_FONT);
             g2d.setColor(Color.WHITE);
 
