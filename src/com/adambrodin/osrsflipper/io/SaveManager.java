@@ -3,6 +3,7 @@ package com.adambrodin.osrsflipper.io;
 import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.*;
 import com.google.gson.Gson;
+import org.dreambot.api.utilities.Logger;
 
 import java.io.*;
 import java.time.Duration;
@@ -11,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.dreambot.api.methods.MethodProvider.log;
-import static org.dreambot.api.methods.MethodProvider.logInfo;
 
 public class SaveManager {
     private static final Gson gson = new Gson();
@@ -21,7 +20,7 @@ public class SaveManager {
 
     public static void Save() {
         if (tradingInfo == null) {
-            log("Attempted to save null tradingInfo!");
+            Logger.log("Attempted to save null tradingInfo!");
             return;
         }
 
@@ -48,7 +47,7 @@ public class SaveManager {
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException e) {
-                log("IOException when WRITING: (" + e.getMessage() + ")");
+                Logger.log("IOException when WRITING: (" + e.getMessage() + ")");
             }
         } else {
             StringBuilder builder = new StringBuilder();
@@ -69,7 +68,7 @@ public class SaveManager {
                         tradingInfo = gson.fromJson(builder.toString(), TradingInfo.class);
                         break;
                     default:
-                        log("Unknown savedType!");
+                        Logger.log("Unknown savedType!");
                 }
             } catch (IOException ignored) {
             }
@@ -95,7 +94,7 @@ public class SaveManager {
         for (BuyingLimit limit : tradingInfo.usedBuyingLimits) {
             if (Duration.between(LocalDateTime.now(), limit.expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
                 tradingInfo.usedBuyingLimits.remove(limit);
-                logInfo("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
+                Logger.info("Removed " + limit.amountUsed + "x used limit from " + limit.item.item.itemName + "! - Surpassed time limit.");
                 continue;
             }
 
@@ -129,7 +128,7 @@ public class SaveManager {
     public static void RemoveLimit(FlipItem item, int amount) {
         tradingInfo.usedBuyingLimits.removeIf(entry -> entry.amountUsed == amount && entry.item.item.itemName.equalsIgnoreCase(item.item.itemName));
         Save();
-        logInfo("Removed limit - " + amount + "x " + item.item.itemName);
+        Logger.info("Removed limit - " + amount + "x " + item.item.itemName);
     }
 
     private enum SavedType {

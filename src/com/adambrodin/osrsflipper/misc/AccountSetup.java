@@ -2,35 +2,39 @@ package com.adambrodin.osrsflipper.misc;
 
 import com.adambrodin.osrsflipper.core.Flipper;
 import com.adambrodin.osrsflipper.core.Main;
-import com.adambrodin.osrsflipper.gui.IngameGUI;
 import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.methods.Calculations;
+import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.container.impl.bank.Bank;
+import org.dreambot.api.methods.container.impl.bank.BankType;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.interactive.NPCs;
+import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.walking.impl.Walking;
+import org.dreambot.api.utilities.Logger;
+import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.NPC;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.dreambot.api.Client.getLocalPlayer;
-import static org.dreambot.api.methods.MethodProvider.*;
+import static org.dreambot.api.utilities.Sleep.sleep;
+import static org.dreambot.api.utilities.Sleep.sleepUntil;
 
 public class AccountSetup {
     private static boolean bankIsChecked = false;
 
     // Does the essential things before trading can start (e.g walk to GE && get cash)
     public static void SetupTrading() {
-        if (!BotConfig.GRANDEXCHANGE_AREA.contains(getLocalPlayer())) {
+        if (!BotConfig.GRANDEXCHANGE_AREA.contains(Players.getLocal())) {
             TravelToGE();
         }
 
         if (GrandExchange.isOpen() && !bankIsChecked) {
             GrandExchange.close();
-            sleepUntil(() -> !GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+            Sleep.sleepUntil(() -> !GrandExchange.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
         }
 
         if (!IsReadyToTrade() && Client.getGameState() == GameState.LOGGED_IN) {
@@ -48,10 +52,10 @@ public class AccountSetup {
             if (!bankIsChecked) {
                 if (NPCs.closest("Banker") != null) {
                     NPCs.closest("Banker").interact("Bank");
-                } else if (Bank.getBank() != null) {
-                    Bank.openClosest();
+                } else if (Bank.getClosestBank(BankType.EXCHANGE) != null) {
+                    Bank.getClosestBank(BankType.EXCHANGE).interact();
                 } else {
-                    logError("No bank was found!");
+                    Logger.error("No bank was found!");
                 }
 
                 sleepUntil(Bank::isOpen, BotConfig.MAX_ACTION_TIMEOUT_MS);
@@ -68,6 +72,7 @@ public class AccountSetup {
                     Bank.withdrawAll("Coins");
                     sleep(500);
                 }
+
                 sleepUntil(() -> Inventory.contains("Coins"), BotConfig.MAX_ACTION_TIMEOUT_MS);
                 Bank.close();
                 sleepUntil(() -> !Bank.isOpen(), BotConfig.MAX_ACTION_TIMEOUT_MS);
@@ -89,7 +94,7 @@ public class AccountSetup {
 
     private static void TravelToGE() {
         int randomEnergyActivate = Calculations.random(BotConfig.MIN_RUNENERGY_ACTIVATE, BotConfig.MAX_RUNENERGY_ACTIVATE);
-        while (!BotConfig.GRANDEXCHANGE_AREA.contains(getLocalPlayer())) {
+        while (!BotConfig.GRANDEXCHANGE_AREA.contains(Players.getLocal())) {
             if (!Walking.isRunEnabled() && Walking.getRunEnergy() >= randomEnergyActivate) {
                 Walking.toggleRun();
                 randomEnergyActivate = Calculations.random(BotConfig.MIN_RUNENERGY_ACTIVATE, BotConfig.MAX_RUNENERGY_ACTIVATE);

@@ -8,24 +8,30 @@ import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.CompletedFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
+import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
+import org.dreambot.api.utilities.Logger;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.dreambot.api.methods.MethodProvider.*;
+import static org.dreambot.api.utilities.Sleep.sleep;
+import static org.dreambot.api.utilities.Sleep.sleepUntil;
 
 public class Flipper {
     private static final FlipFinder flipFinder = new FlipFinder();
     public static List<ActiveFlip> activeFlips = new ArrayList<>();
 
+    private static MethodProvider methodProvider = new MethodProvider();
+
     public static void ExecuteFlips() {
         for (int i = 0; i < Flipper.activeFlips.size(); i++) {
             if (!Inventory.contains(Flipper.activeFlips.get(i).item.item.itemName) && !GEController.ItemInSlot(Flipper.activeFlips.get(i).item)) {
-                log("Flip no longer active, removing! - " + Flipper.activeFlips.get(i).toString());
+                Logger.log("Flip no longer active, removing! - " + Flipper.activeFlips.get(i).toString());
+
                 Flipper.activeFlips.remove(Flipper.activeFlips.get(i));
                 SaveManager.SaveActiveFlips(Flipper.activeFlips);
                 continue;
@@ -39,7 +45,6 @@ public class Flipper {
         if (AccountSetup.IsReadyToTrade() && !activeFlips.stream().anyMatch(flip -> !GEController.ItemInSlot(flip.item) && Inventory.contains(flip.item.item.itemName))) {
             if (GrandExchange.isReadyToCollect()) {
                 GrandExchange.collect();
-                sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
             }
 
             int cashInInventory = Inventory.contains("Coins") ? Inventory.count("Coins") : 0;
@@ -58,7 +63,8 @@ public class Flipper {
                     bestItem = flipFinder.GetBestItem(availableGp, false);
                 } else {
                     availableGp = activeFlips.size() <= 5 ? (int) (cashInInventory * BotConfig.MAX_NO_RESTRICTIONS_CASHSTACK_PERC) : cashInInventory;
-                    log("The next flip will be fetched without using volume/margin rules!");
+                    Logger.log("The next flip will be fetched without using volume/margin rules!");
+
                     bestItem = flipFinder.GetBestItem(availableGp, true);
                     bestItem.skippedRequirements = true;
                 }
@@ -75,13 +81,13 @@ public class Flipper {
             for (int i = 0; i < SaveManager.tradingInfo.usedBuyingLimits.size() - 1; i++) {
                 if (Duration.between(LocalDateTime.now(), SaveManager.tradingInfo.usedBuyingLimits.get(i).expiryTime).toHours() >= BotConfig.BUYING_LIMIT_HOURS) {
                     SaveManager.tradingInfo.usedBuyingLimits.remove(i);
-                    logInfo("(SURPASSED TIME LIMIT): Removed " + SaveManager.tradingInfo.usedBuyingLimits.get(i).amountUsed + "x used limit from " + SaveManager.tradingInfo.usedBuyingLimits.get(i).item.item.itemName + "!");
+                    Logger.info("(SURPASSED TIME LIMIT): Removed " + SaveManager.tradingInfo.usedBuyingLimits.get(i).amountUsed + "x used limit from " + SaveManager.tradingInfo.usedBuyingLimits.get(i).item.item.itemName + "!");
                 }
             }
         }
 
         if (activeFlips.isEmpty()) {
-            log("No active flips were found!");
+            Logger.log("No active flips were found!");
             Main.currentAction = "No active flips found";
             return;
         }
@@ -94,6 +100,7 @@ public class Flipper {
             if (shouldExitFlip) {
                 if (GrandExchange.isReadyToCollect()) {
                     GrandExchange.collect();
+
                     sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
                 }
 
@@ -108,16 +115,17 @@ public class Flipper {
                     continue;
                 }
                 sleep(3000);
+
                 int amountInInv = Inventory.contains(flip.item.item.itemName) ? Inventory.count(flip.item.item.itemName) : 0;
 
                 ActiveFlip newFlip = null;
 
                 if (flip.buy) {
-                    log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f", completedPercentage) + "% - " + amountInInv + "x in inventory");
+                    Logger.log("Completed percentage for " + flip.item.item.itemName + " is: " + String.format("%.2f", completedPercentage) + "% - " + amountInInv + "x in inventory");
 
                     // Bought over the % limit
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1 || (completedPercentage > 0 && flip.amount >= BotConfig.MIN_FLIP_ITEMS_FORCE_SELL)) && Inventory.contains(flip.item.item.itemName)) {
-                        log("Selling " + flip.item.item.itemName + " normally!");
+                        Logger.log("Selling " + flip.item.item.itemName + " normally!");
 
                         newFlip = GEController.TransactItem(flip.item, false, amountInInv);
                         if (newFlip == null) { // If something goes wrong when selling (items remain in inv)
@@ -150,7 +158,7 @@ public class Flipper {
 
                 if (!Inventory.contains(flip.item.item.itemName) && GEController.GetSlotFromItem(flip.item, flip.buy) == -1) {
                     if (profit >= flip.item.potentialProfitGp * 1.5) {
-                        log("Profit for item: " + flip.item.item.itemName + " is suspiciously high, using potential profit instead. Original value: " + profit + " gp");
+                        Logger.log("Profit for item: " + flip.item.item.itemName + " is suspiciously high, using potential profit instead. Original value: " + profit + " gp");
                         profit = flip.item.potentialProfitGp;
                     }
 
@@ -161,7 +169,7 @@ public class Flipper {
                     }
 
                     if (!flip.buy) {
-                        logInfo(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
+                        Logger.info(flip.toString() + " ENDED with a profit of: " + IngameGUI.GetFormattedNumbers(profit, true, false));
                     }
                     activeFlips.remove(activeFlips.get(i));
 
@@ -175,16 +183,17 @@ public class Flipper {
 
     private static int ForceSell(ActiveFlip flip) {
         int amount = Inventory.count(flip.item.item.itemName);
-        logInfo("Force-selling " + amount + "x " + flip.item.item.itemName);
+        Logger.info("Force-selling " + amount + "x " + flip.item.item.itemName);
+
         GrandExchange.sellItem(flip.item.item.itemName, amount, (int) (flip.item.avgLowPrice * 0.5));
         sleepUntil(() -> GEController.ItemInSlot(flip.item) && GEController.GetCompletedPercentage(flip.item, false) >= 100, BotConfig.MAX_ACTION_TIMEOUT_MS);
         int receivedGold = GEController.GetTransferredValue(flip.item);
         if (receivedGold == -1) {
-            logInfo("RECEIVED GOLD SET TO AVGLOWPRICE");
+            Logger.info("RECEIVED GOLD SET TO AVGLOWPRICE");
             receivedGold = amount * flip.item.avgLowPrice;
         }
 
-        logInfo("RECEIVED GOLD FROM SLOT: " + receivedGold + "gp");
+        Logger.info("RECEIVED GOLD FROM SLOT: " + receivedGold + "gp");
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
         return receivedGold - (amount * (flip.item.avgLowPrice + (BotConfig.CUT_PRICES ? (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100)) : 1)));

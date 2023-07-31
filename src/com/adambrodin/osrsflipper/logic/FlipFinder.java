@@ -8,13 +8,13 @@ import com.adambrodin.osrsflipper.models.ApiItem;
 import com.adambrodin.osrsflipper.models.FlipItem;
 import com.adambrodin.osrsflipper.models.PriceData;
 import com.adambrodin.osrsflipper.network.RuneLiteApi;
+import org.dreambot.api.utilities.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.dreambot.api.methods.MethodProvider.log;
 
 public class FlipFinder {
     private final List<ApiItem> availableItems;
@@ -91,11 +91,11 @@ public class FlipFinder {
                     bestItemPerfScore = bestItem.GetPerformanceScore(availableGp, SaveManager.GetRemainingLimit(bestItem));
                 }
             } catch (Exception e) {
-                log("Exception for item " + item.item.itemName + " - " + e.getMessage());
+                Logger.log("Exception for item " + item.item.itemName + " - " + e.getMessage());
             }
         }
 
-        log("Considered items: " + (long) bestItems.size());
+        Logger.log("Considered items: " + (long) bestItems.size());
 
         // Return the best item
         return bestItem;

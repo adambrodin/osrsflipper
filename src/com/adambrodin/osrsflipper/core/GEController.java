@@ -6,8 +6,11 @@ import com.adambrodin.osrsflipper.models.FlipItem;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.grandexchange.GrandExchangeItem;
+import org.dreambot.api.utilities.Logger;
 
 import static org.dreambot.api.methods.MethodProvider.*;
+import static org.dreambot.api.utilities.Sleep.sleep;
+import static org.dreambot.api.utilities.Sleep.sleepUntil;
 
 public class GEController {
     // Buy/sell in the GE
@@ -40,7 +43,7 @@ public class GEController {
             sleepUntil(() -> GEController.ItemInSlot(item), 5000);
             if (GEController.ItemInSlot(item)) {
                 ActiveFlip flip = new ActiveFlip(buy, amount, item);
-                logInfo("Created new " + flip.toString());
+                Logger.info("Created new " + flip.toString());
                 Flipper.activeFlips.add(flip);
                 return flip;
             }
@@ -57,7 +60,7 @@ public class GEController {
                     return true;
                 }
             } catch (Exception e) {
-                log(e.getMessage());
+                Logger.log(e.getMessage());
             }
         }
         return false;
@@ -85,7 +88,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
-            log(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         Main.currentAction = "Couldn't collect item: [" + (isBuy ? "BUY" : "SELL") + "] " + item.item.itemName;
@@ -117,7 +120,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
-            log(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         return -1;
@@ -137,7 +140,7 @@ public class GEController {
                 sleep(250);
             }
         } catch (Exception e) {
-            log(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         // Item not found
@@ -153,7 +156,7 @@ public class GEController {
                 }
             }
         } catch (Exception e) {
-            log(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         return availableSlots;
@@ -172,7 +175,7 @@ public class GEController {
                 sleep(250);
             }
         } catch (Exception e) {
-            log(e.getMessage());
+            Logger.log(e.getMessage());
         }
 
         // Item not found
