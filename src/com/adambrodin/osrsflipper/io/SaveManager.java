@@ -1,8 +1,10 @@
 package com.adambrodin.osrsflipper.io;
 
 import com.adambrodin.osrsflipper.misc.BotConfig;
+import com.adambrodin.osrsflipper.misc.LocalDateTimeAdapter;
 import com.adambrodin.osrsflipper.models.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.dreambot.api.utilities.Logger;
 
 import java.io.*;
@@ -14,7 +16,7 @@ import java.util.Objects;
 
 
 public class SaveManager {
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
     public static int sessionStartFlipsInitiated;
     public static TradingInfo tradingInfo;
 
