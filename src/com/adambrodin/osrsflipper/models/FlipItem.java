@@ -26,7 +26,7 @@ public class FlipItem {
         float score = 0;
 
         // Determines how many items that can be bought based on player gold & current market
-        int purchasePrice = BotConfig.CUT_PRICES ? avgLowPrice + Math.round((float) avgLowPrice / 100) : avgLowPrice;
+        int purchasePrice = avgLowPrice;
         maxAmountAvailable = (int) Math.min(Math.min(remainingBuyingLimit, averagedVolume), (float) (availableGp / purchasePrice));
         potentialProfitGp = maxAmountAvailable * marginGp;
         if (potentialProfitGp >= BotConfig.MIN_PROFIT_FOR_FLIP) {

@@ -8,6 +8,8 @@ import com.adambrodin.osrsflipper.misc.BotConfig;
 import com.adambrodin.osrsflipper.models.ActiveFlip;
 import com.adambrodin.osrsflipper.models.CompletedFlip;
 import com.adambrodin.osrsflipper.models.FlipItem;
+import com.adambrodin.osrsflipper.models.PriceData;
+import com.adambrodin.osrsflipper.network.RuneLiteApi;
 import org.dreambot.api.methods.MethodProvider;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
@@ -24,8 +26,6 @@ import static org.dreambot.api.utilities.Sleep.sleepUntil;
 public class Flipper {
     private static final FlipFinder flipFinder = new FlipFinder();
     public static List<ActiveFlip> activeFlips = new ArrayList<>();
-
-    private static MethodProvider methodProvider = new MethodProvider();
 
     public static void ExecuteFlips() {
         for (int i = 0; i < Flipper.activeFlips.size(); i++) {
@@ -127,11 +127,24 @@ public class Flipper {
                     if ((completedPercentage >= BotConfig.MIN_FLIP_NORMAL_SELL_PERC || completedPercentage == -1 || (completedPercentage > 0 && flip.amount >= BotConfig.MIN_FLIP_ITEMS_FORCE_SELL)) && Inventory.contains(flip.item.item.itemName)) {
                         Logger.log("Selling " + flip.item.item.itemName + " normally!");
 
+                        int buyingPrice = flip.item.avgLowPrice;
+
+                        // Update sell price to reflect live market prices
+                        PriceData livePrice = RuneLiteApi.GetSingleItemData(flip.item.item.itemID);
+                        if(livePrice.lowPrice != 0)
+                        {
+                            flip.item.marginGp = livePrice.highPrice - livePrice.lowPrice;
+                            flip.item.avgLowPrice = livePrice.lowPrice;
+                        }
+
+                        Logger.log("SELLING FOR LOW PRICE:" + flip.item.avgLowPrice + " MARGIN: " + flip.item.marginGp);
+
                         newFlip = GEController.TransactItem(flip.item, false, amountInInv);
                         if (newFlip == null) { // If something goes wrong when selling (items remain in inv)
                             return;
                         }
-                        newFlip.item.potentialProfitGp = amountInInv * newFlip.item.marginGp;
+
+                        newFlip.item.potentialProfitGp = (amountInInv * (flip.item.avgLowPrice + flip.item.marginGp)) - (buyingPrice * amountInInv);
 
                         // Remove the unused buying limit (if < 100% was bought)
                         SaveManager.ModifyLimit(flip.item, flip.amount, flip.amount - amountInInv);
@@ -149,7 +162,7 @@ public class Flipper {
                 } else {
                     // If it's a sell flip
                     if (completedPercentage >= 100) {
-                        profit = flip.amount * (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100));
+                        profit = flip.amount * flip.item.marginGp;
                     } else {
                         int forceProfit = ForceSell(flip);
                         profit += forceProfit;
@@ -196,6 +209,6 @@ public class Flipper {
         Logger.info("RECEIVED GOLD FROM SLOT: " + receivedGold + "gp");
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
-        return receivedGold - (amount * (flip.item.avgLowPrice + (BotConfig.CUT_PRICES ? (flip.item.marginGp - Math.round((float) flip.item.avgLowPrice / 100)) : 1)));
+        return receivedGold - (amount * flip.item.avgLowPrice);
     }
 }

@@ -17,6 +17,8 @@ public class BotConfig {
     // FLIP CONFIGURATIONS
     public static final boolean ONLY_F2P_ITEMS = false;
     public static final int ITEM_VOLUME_GREAT = 100000; // Determine what min volume that gets extra score when considered
+    public static final int ITEM_VALUE_TAX_THRESHOLD = 1000;
+    public static final float ITEM_VALUE_TAX_PERC = 0.01f;
     public static final float MAX_CASHSTACK_PERCENTAGE_PER_FLIP = 0.5f; // The max percentage of the current money to use in a single flip (values less than 100 provide a broader range of items instead of spending everything on one item)
     public static final float MIN_PROFIT_FOR_FLIP = 5000;
     public static final boolean INCLUDE_RISKY_FLIP = true;
@@ -34,28 +36,35 @@ public class BotConfig {
     public static final float MIN_ITEM_MARGIN_GP = 2;
     public static final float MIN_ITEM_VOLUME = 1000; // Min volume for an item in the endpoint timespan
     public static final int MIN_ITEM_PRICE_FOR_CUT = 100; // Min item price for it to be cut (to prevent cutting very cheap items)
+    public static final boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
+    public static final float CUT_PRICES_PERC = 0.004f;
 
-    public static final List<String> BLOCKED_ITEMS = Arrays.asList("Swamp tar", "Swamp paste", "Thread", "Bucket of water", "Bucket", "Jug", "Jug of water", "Fishing bait", "Trading sticks", "Old school bond", "Nail beast nails", "Looting bag note", "Lassar teleport");
+    public static final List<String> BLOCKED_ITEMS = Arrays.asList("Swamp tar", "Swamp paste", "Thread", "Bucket of water", "Bucket", "Jug", "Jug of water", "Fishing bait", "Trading sticks", "Old school bond", "Nail beast nails", "Looting bag note", "Lassar teleport", "Nihil shard");
+
     // LOCATIONS
     public static final Area GRANDEXCHANGE_AREA = new Area(3155, 3480, 3174, 3499);
+
     // TIMEOUTS
     public static final int MAX_ACTION_TIMEOUT_MS = 3000; // Max time before automatically moving on from a sleepUntil (in case something went wrong, to prevent program getting stuck)
     public static final int LOGOUT_SLEEP_DURATION_MINUTES = 45; // The amount of time to sleep when logged out before logging back in
+
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = false;
     public static final int BUYING_LIMIT_HOURS = 4; // The amount of hours to add when saving the used buying limits internally (through io)
+
     // TRAVELLING
     public static final int MIN_RUNENERGY_ACTIVATE = 3; // The minimum amount of run energy to randomly activate run when walking
     public static final int MAX_RUNENERGY_ACTIVATE = 10; // The maximum amount of run energy to randomly activate run when walking
     public static final int MIN_WALK_CLICK_DELAY_MS = 500; // The minimum amount of delay before clicking the next tile while walking/running
     public static final int MAX_WALK_CLICK_DELAY_MS = 2000; // The maximum amount of delay before clicking the next tile while walking/running
+
     // GUI
     public static final int OVERLAY_TEXT_X_OFFSET = 3;
     public static final int OVERLAY_TEXT_Y_OFFSET = 25;
     public static final Font OVERLAY_FONT = new Font("Open Sans", Font.BOLD, 20);
     public static final Font SLOT_OVERLAY_FONT = new Font("Open Sans", Font.BOLD, 14);
+
     // IO
     public static final String SAVED_DATA_PATH = System.getProperty("user.dir");
     public static final String SAVED_DATA_FILE_NAME = SAVED_DATA_PATH + "OSRS_FLIPPER_DATA.json";
-    public static final boolean CUT_PRICES = true; // If the bot should under/overcut prices when trading (may increase profits by making trades execute faster)
 }

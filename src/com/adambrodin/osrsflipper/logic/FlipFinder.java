@@ -53,8 +53,21 @@ public class FlipFinder {
             if (!isMember && apiItem != null) {
                 int avgHighPrice = entryItem.highPrice;
                 int avgLowPrice = entryItem.lowPrice;
+
+                if(BotConfig.CUT_PRICES)
+                {
+                    avgHighPrice = (int) (avgHighPrice - (avgHighPrice *  BotConfig.CUT_PRICES_PERC));
+                    avgLowPrice = (int) (avgLowPrice - (avgLowPrice *  BotConfig.CUT_PRICES_PERC));
+                }
+
                 float marginPerc = (((float) avgHighPrice / (float) avgLowPrice) * 100) - 100;
                 int marginGp = avgHighPrice - avgLowPrice;
+
+                if(avgHighPrice >= BotConfig.ITEM_VALUE_TAX_THRESHOLD)
+                {
+                    marginPerc = marginPerc - (marginPerc * BotConfig.ITEM_VALUE_TAX_PERC);
+                    marginGp = (int) (marginGp - (marginGp * BotConfig.ITEM_VALUE_TAX_PERC));
+                }
 
                 double averagedVolume = ((double) entryItem.highPriceVolume + (double) entryItem.lowPriceVolume) / 2;
 

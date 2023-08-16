@@ -23,19 +23,9 @@ public class GEController {
         int price;
         if (buy) {
             price = item.avgLowPrice;
-            if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT && item.marginGp > ((float) item.avgLowPrice / 100) + 2) {
-                // Increase the price slightly to overcut
-                price += Math.round((float) item.avgLowPrice / 100);
-            }
-
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
         } else {
             price = item.avgLowPrice + item.marginGp;
-            if (BotConfig.CUT_PRICES && price >= BotConfig.MIN_ITEM_PRICE_FOR_CUT && item.marginGp > ((float) item.avgLowPrice / 100) + 2) {
-                // Decrease the price slightly to undercut
-                price -= Math.round((float) item.avgLowPrice / 100);
-            }
-
             tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);
         }
 
@@ -68,8 +58,8 @@ public class GEController {
 
     // Returns the amount of items from slot
     public static void CollectItem(FlipItem item, boolean isBuy) {
-        try {
-            if (GrandExchange.isOpen()) {
+        if (GrandExchange.isOpen()) {
+            try {
                 for (GrandExchangeItem geItem : GrandExchange.getItems()) {
                     if (geItem != null && geItem.getItem().getName().equalsIgnoreCase(item.item.itemName) && geItem.isBuyOffer() == isBuy) {
                         // If its fully completed
@@ -86,9 +76,9 @@ public class GEController {
                         return;
                     }
                 }
+            } catch (Exception e) {
+                Logger.log(e.getMessage());
             }
-        } catch (Exception e) {
-            Logger.log(e.getMessage());
         }
 
         Main.currentAction = "Couldn't collect item: [" + (isBuy ? "BUY" : "SELL") + "] " + item.item.itemName;
@@ -115,6 +105,7 @@ public class GEController {
     public static int GetTransferredValue(FlipItem item) {
         try {
             for (GrandExchangeItem geItem : GrandExchange.getItems()) {
+                Logger.log("FORCE SELL: geItem:"+geItem.getItem().getName()+ "item:"+item.item.itemName);
                 if (geItem.getItem().getName().equalsIgnoreCase(item.item.itemName)) {
                     return geItem.getTransferredValue();
                 }
