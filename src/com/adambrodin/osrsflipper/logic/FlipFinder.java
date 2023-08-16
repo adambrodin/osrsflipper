@@ -57,7 +57,7 @@ public class FlipFinder {
                 if(BotConfig.CUT_PRICES)
                 {
                     avgHighPrice = (int) (avgHighPrice - (avgHighPrice *  BotConfig.CUT_PRICES_PERC));
-                    avgLowPrice = (int) (avgLowPrice - (avgLowPrice *  BotConfig.CUT_PRICES_PERC));
+                    avgLowPrice = (int) (avgLowPrice + (avgLowPrice *  BotConfig.CUT_PRICES_PERC));
                 }
 
                 float marginPerc = (((float) avgHighPrice / (float) avgLowPrice) * 100) - 100;
