@@ -54,7 +54,7 @@ public class Main extends AbstractScript {
             Flipper.ExecuteFlips();
         } else if (hasLoggedIn) {
             getRandomManager().disableSolver(RandomEvent.LOGIN);
-            int logoutTimeMinutes = BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + Calculations.random(-10, 25);
+            int logoutTimeMinutes = BotConfig.LOGOUT_SLEEP_DURATION_MINUTES + Calculations.random(0, 15);
             loggingBackInMillis = System.currentTimeMillis() + ((logoutTimeMinutes * 60) * 1000);
 
             Logger.log("Logged out! Waiting " + logoutTimeMinutes + " minutes before logging back in.");
