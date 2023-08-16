@@ -28,7 +28,7 @@ public class BotConfig {
     public static final int MIN_CASHSTACK_FOR_PERCENTAGE_FLIP = 2000000; // Min amount of gp to only use MAX_CASHSTACK_PERCENTAGE_PER_FLIP instead of 100%
     public static final int MAX_FLIP_ACTIVE_TIME_MINUTES = 120;
     public static final int MIN_FLIP_ITEMS_FORCE_SELL = 20; // The minimum amount of items to force-sell if not all items were bought
-    public static final float MAX_FLIP_COMPLETED_PERC_EXIT = 90; // The maximum amount of % completed before force-exiting it
+    public static final float MAX_FLIP_COMPLETED_PERC_EXIT = 95; // The maximum amount of % completed before force-exiting it
     public static final float MIN_FLIP_NORMAL_SELL_PERC = 25f; // The minimum amount of % sell to sell it normally (otherwise force-sell)
     public static final float MAX_ITEM_MARGIN_PERCENTAGE = 20; // Max percentage margin for an item to even be considered at all
     public static final float MAX_VALID_MARGIN_PERCENTAGE = 10; // Maximum percentage for an item to considered normally (this is to minimize items such as runes with 25% margin)
@@ -46,7 +46,7 @@ public class BotConfig {
 
     // TIMEOUTS
     public static final int MAX_ACTION_TIMEOUT_MS = 3000; // Max time before automatically moving on from a sleepUntil (in case something went wrong, to prevent program getting stuck)
-    public static final int LOGOUT_SLEEP_DURATION_MINUTES = 45; // The amount of time to sleep when logged out before logging back in
+    public static final int LOGOUT_SLEEP_DURATION_MINUTES = 30; // The amount of time to sleep when logged out before logging back in
 
     // MISC
     public static final boolean DISABLE_AUTOLOGIN = false;
