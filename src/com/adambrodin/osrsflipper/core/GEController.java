@@ -26,6 +26,12 @@ public class GEController {
             tradeCreated = GrandExchange.buyItem(item.item.itemName, amount, price);
         } else {
             price = item.avgLowPrice + item.marginGp;
+
+            if(BotConfig.CUT_PRICES)
+            {
+                price = (int) (price - (price * BotConfig.CUT_PRICES_PERC));
+            }
+
             tradeCreated = GrandExchange.sellItem(item.item.itemName, amount, price);
         }
 
