@@ -8,6 +8,7 @@ import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.methods.grandexchange.GrandExchangeItem;
 import org.dreambot.api.utilities.Logger;
 
+import static com.adambrodin.osrsflipper.misc.BotConfig.MIN_ITEM_PRICE_FOR_CUT;
 import static org.dreambot.api.methods.MethodProvider.*;
 import static org.dreambot.api.utilities.Sleep.sleep;
 import static org.dreambot.api.utilities.Sleep.sleepUntil;
@@ -27,7 +28,7 @@ public class GEController {
         } else {
             price = item.avgLowPrice + item.marginGp;
 
-            if(BotConfig.CUT_PRICES)
+            if(BotConfig.CUT_PRICES && price >= MIN_ITEM_PRICE_FOR_CUT)
             {
                 price = (int) (price - (price * BotConfig.CUT_PRICES_PERC));
             }

@@ -165,9 +165,12 @@ public class Flipper {
                         profit = flip.amount * flip.item.marginGp;
                     } else {
                         int forceProfit = ForceSell(flip);
+
+                        profit = (int) ((flip.amount * flip.item.marginGp) * (completedPercentage / 100));
                         profit += forceProfit;
                     }
                 }
+
 
                 if (!Inventory.contains(flip.item.item.itemName) && GEController.GetSlotFromItem(flip.item, flip.buy) == -1) {
                     if (profit >= flip.item.potentialProfitGp * 1.5) {
@@ -207,8 +210,10 @@ public class Flipper {
         }
 
         Logger.info("RECEIVED GOLD FROM SLOT: " + receivedGold + "gp");
+        sleep(2000);
         GrandExchange.collect();
         sleepUntil(() -> !GrandExchange.isReadyToCollect(), BotConfig.MAX_ACTION_TIMEOUT_MS);
+
         return receivedGold - (amount * flip.item.avgLowPrice);
     }
 }

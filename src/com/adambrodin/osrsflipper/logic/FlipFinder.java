@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.adambrodin.osrsflipper.misc.BotConfig.MIN_ITEM_PRICE_FOR_CUT;
+
 
 public class FlipFinder {
     private final List<ApiItem> availableItems;
@@ -54,7 +56,7 @@ public class FlipFinder {
                 int avgHighPrice = entryItem.highPrice;
                 int avgLowPrice = entryItem.lowPrice;
 
-                if(BotConfig.CUT_PRICES)
+                if(BotConfig.CUT_PRICES && avgLowPrice >= MIN_ITEM_PRICE_FOR_CUT)
                 {
                     avgHighPrice = (int) (avgHighPrice - (avgHighPrice *  BotConfig.CUT_PRICES_PERC));
                     avgLowPrice = (int) (avgLowPrice + (avgLowPrice *  BotConfig.CUT_PRICES_PERC));
