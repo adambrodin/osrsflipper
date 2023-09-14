@@ -78,6 +78,15 @@ public class RuneLiteApi {
         return filteredItems;
     }
 
+    public static PriceData GetSingleItemData(int itemId)
+    {
+        // Fetch live-data from API
+        String priceDataJson = GetJsonString(BotConfig.PRICE_DATA_ENDPOINT + "?id=" + itemId);
+        ApiPriceDataResponse priceResponse = new Gson().fromJson(priceDataJson, ApiPriceDataResponse.class);
+
+        return priceResponse.data.get(itemId);
+    }
+
     public static ArrayList<ApiItem> GetAllItems() {
         // Fetch all available OSRS items
         String jsonData = GetJsonString(BotConfig.ITEM_INFORMATION_ENDPOINT);
